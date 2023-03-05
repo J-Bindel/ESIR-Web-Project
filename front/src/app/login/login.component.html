@@ -1,0 +1,8 @@
+<div class="sign-in-form">
+  <label for="username">Username</label>
+  <input type="text" id="username" placeholder="username" />
+  <label for="password">Password</label>
+  <input type="password" id="password" placeholder="password" />
+  <a (click)="login()"><button>Login</button></a>
+  <div *ngIf="errorMessage" class="error-message">{{errorMessage}}</div>
+</div>
