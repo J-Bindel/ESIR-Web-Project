@@ -1,0 +1,36 @@
+# Docker compose of my project
+#The order matter
+
+version: "3"
+
+services:
+
+  # DB
+  database:
+    build: ./database
+    image: jbindel/fr_administration_database
+  
+  # Back
+  back:
+    build: ./back
+    image: jbindel/fr_administration_back
+    depends_on:
+      - database
+      
+  # Front
+  front:
+    build: ./front
+    image: jbindel/fr_administration_front
+    depends_on:
+      - back
+
+  # Gateway
+  nginx:
+    build: ./nginx
+    image: jbindel/fr_administration_gateway
+    depends_on:
+      - front
+      - back
+    ports:
+      - 80:80
+  
