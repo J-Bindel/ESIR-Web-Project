@@ -1,0 +1,7 @@
+stages:
+  -build
+sonarqube:
+  image: sonarqube
+  stage: build
+  script:
+    - sonar-scanner
