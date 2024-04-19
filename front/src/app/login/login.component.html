@@ -1,8 +1,9 @@
-<div class="sign-in-form">
-  <label for="username">Username</label>
-  <input type="text" id="username" placeholder="username" />
-  <label for="password">Password</label>
-  <input type="password" id="password" placeholder="password" />
-  <a (click)="login()"><button>Login</button></a>
-  <div *ngIf="errorMessage" class="error-message">{{errorMessage}}</div>
+<div id="background">
+  <fieldset id="sign-in-form">
+    <span id="sign-in-title">Sign in</span>
+    <input *ngIf="!showPasswordInput" (keydown.enter)="showPassword()" [(ngModel)]="email" type="text" id="email" placeholder="email" />
+    <input *ngIf="showPasswordInput" (keydown.enter)="login()" type="password" id="password" placeholder="password" />
+    <a (click)="login()"><button>Log in</button></a>
+    <div *ngIf="errorMessage" class="error-message">{{errorMessage}}</div>
+  </fieldset>
 </div>
