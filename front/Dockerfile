@@ -1,20 +1,13 @@
-# start from base image
-FROM node:18
+FROM node:latest
 
-# Define working directory
 WORKDIR /usr/src/app
 
-# Install Angular CLI
-RUN npm install -g @angular/cli
-
-# Copy web project in working directory
 COPY . .
 
-# Install dependencies
-RUN npm install --loglevel verbose
+RUN npm install -g @angular/cli
 
-# expose port
+RUN npm install
+
 EXPOSE 4200
+EXPOSE 49153
 
-# start app
-CMD [ "ng", "serve", "--disable-host-check", "--host", "0.0.0.0", "--open" ]
