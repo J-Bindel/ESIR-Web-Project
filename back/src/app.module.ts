@@ -2,8 +2,6 @@ import { Module } from '@nestjs/common';
 import { AssociationsModule } from './associations/associations.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
-import { User } from './users/user.entity';
-import { Association } from './associations/association.entity';
 import { AuthModule } from './auth/auth.module';
 
 @Module({
