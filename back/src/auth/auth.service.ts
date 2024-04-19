@@ -13,15 +13,15 @@ export class AuthService {
 
     }
 
-    public async validateUser(id: number, password: string) : Promise<User> {
+    public async validateUser(email: string, password: string) : Promise<User> {
         const users : User[] = await this.userservice.getAllUsers();
         let user_target : User = undefined;
         users.forEach((user) => {
-            if(user.id == id) {
+            if(user.email === email) {
                user_target = user;
             }
         });
-        if (user_target !== undefined) {
+        if (user_target !== null) {
             const goodPassword: boolean = await bcrypt.compare(password, user_target.password);
             if (goodPassword) {
                 return user_target;

@@ -8,14 +8,14 @@ export class UserInput {
 
     @ApiProperty({
         description : 'The firstname of the user',
-        example : "John",
+        example : "Jean",
         type : String,
     })
     public firstname : string;
 
     @ApiProperty({
         description : 'The lastname of the user',
-        example : "Dupont",
+        example : "Dupond",
         type : String,
     })
     public lastname: string;
@@ -27,6 +27,13 @@ export class UserInput {
         type : Number,
     })
     public age : number;
+
+    @ApiProperty ({
+        description : 'The email of the user',
+        example : 'jean.dupond@example.com',
+        type : String,
+    })
+    public email : string;
 
     @ApiProperty({
         description:' The password of the user',
@@ -52,20 +59,17 @@ export class UsersController {
 
     @UseGuards(AuthGuard('jwt'))
     @ApiOperation({ summary: 'Get a user'})
+    @ApiParam({ name: 'id', description: 'User ID', type: 'integer' })
     @ApiResponse({
         status: 200,
         description: 'The found record',
         type: UserInput,
     })
-    @ApiParam({
-        name: 'identifier', required: true, description: 'an integer of a user id',
-        allowEmptyValue: false
-    })
     @Get(':id')
     public async getUserById(@Param() parameter) : Promise <User> {
         const id : number = parameter.id;
         const user_target : User = await this.service.getUserById(id);
-        if(user_target === undefined) {
+        if(user_target === null) {
             throw new HttpException(`Could not find a valid user with id : ${id}`, HttpStatus.NOT_FOUND);
         }
         return user_target;
@@ -79,29 +83,30 @@ export class UsersController {
     })
     @ApiBody({
         type: UserInput,
-        description: "A user with a firstname, a lastname, an age and a password",
+        description: "A user with a firstname, a lastname, an age, an email and a password",
         examples: {
             a: {
                 summary: "Jean Dupond",
                 description: "User example",
-                value: {firstname: "Jean", lastname: "Dupond", age: 23, password:"valid_password"} as UserInput
+                value: {firstname: "Jean", lastname: "Dupond", age: 23, email: "jean.dupond@example.com", password:"valid_password"} as UserInput
             }
         }
     })
     @Post()
     public async create(@Body() input : UserInput) : Promise <User> {
-        return await this.service.create(input.firstname, input.lastname, input.age, input.password);
+        return await this.service.create(input.firstname, input.lastname, input.age, input.email, input.password);
     }
     
     @UseGuards(AuthGuard('jwt'))
+    @ApiParam({ name: 'id', description: 'User ID', type: 'integer' })
     @ApiBody({
         type: UserInput,
-        description: "A user with a firstname, a lastname, an age and a password",
+        description: "A user with a firstname, a lastname, an age, and email and a password",
         examples: {
             a: {
                 summary: "Jean Dupond",
                 description: "User example",
-                value: {firstname: "Jean", lastname: "Dupond", age: 23, password:"valid_password"} as UserInput
+                value: {firstname: "Jean", lastname: "Dupond", age: 23, email: "jean.dupond@example.com", password:"valid_password"} as UserInput
             }
         }
     })
@@ -110,47 +115,29 @@ export class UsersController {
         description: 'The user to set',
         type: UserInput,
     })
-    @ApiParam({
-        name: 'identifier', required: true, description: 'an integer of a user id',
-        allowEmptyValue: false
-    })
     @Put(':id')
     public async setUser(@Param() parameter, @Body() input : any) : Promise <User> {
         const id : number = parameter.id;
         const user_target : User = await this.service.getUserById(id);
-        if(user_target === undefined) {
+        if(user_target === null) {
             throw new HttpException(`Could not find a valid user with id : ${id}`, HttpStatus.NOT_FOUND);
         }
         
-        return this.service.setUser(id, input.firstname, input.lastname, input.age, input.password);
+        return this.service.setUser(id, input.firstname, input.lastname, input.age, input.email, input.password);
         }    
 
     @UseGuards(AuthGuard('jwt'))
-    @ApiBody({
-        type: UserInput,
-        description: "A user with a firstname, a lastname, an age and a password",
-        examples: {
-            a: {
-                summary: "Jean Dupond",
-                description: "User example",
-                value: {firstname: "Jean", lastname: "Dupond", age: 23, password:"valid_password"} as UserInput
-            }
-        }
-    })
+    @ApiParam({ name: 'id', description: 'User ID', type: 'integer' })
     @ApiResponse({
         status: 200,
         description: 'The user to delete',
         type: UserInput,
     })
-    @ApiParam({
-        name: 'identifier', required: true, description: 'an integer of a user id',
-        allowEmptyValue: false
-    })
     @Delete(':id') 
     public async deleteUser(@Param() parameter) : Promise <boolean> {
         const id : number = parameter.id;
         const user_target : User = await this.service.getUserById(id);
-        if(user_target === undefined) {
+        if(user_target === null) {
             throw new HttpException(`Could not find a valid user with id : ${id}`, HttpStatus.NOT_FOUND);
         }
         

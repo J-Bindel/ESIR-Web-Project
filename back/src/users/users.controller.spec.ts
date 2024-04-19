@@ -41,6 +41,7 @@ describe('UsersController', () => {
           firstname: 'John',
           lastname: 'Doe',
           age: 23,
+          email: 'john.doe@example.com',
           password: 'oheohecapitaine'
       }]);
       jest.spyOn(service, 'getAllUsers').mockImplementation(() => expected);
@@ -55,6 +56,7 @@ describe('UsersController', () => {
         firstname: 'John',
         lastname: 'Doe',
         age:23,
+        email: 'john.doe@example.com',
         password: 'oheohecapitaine'
       }]);
       jest.spyOn(service, 'getUserById').mockImplementation(id => {
