@@ -2,7 +2,7 @@
     "type": "mysql",
     "host": "database",
     "port": 3306,
-    "username": "admin",
+    "username": "root",
     "password": "admin",
     "database": "fr_administration_database",
     "entities": ["dist/**/*.entity{.ts,.js}"],
