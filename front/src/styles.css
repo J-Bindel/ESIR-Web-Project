@@ -62,7 +62,7 @@ h1 {
 }
 
 #sign-in-form {
-    width: 30%;
+    width: 35%;
     height: 60%;
     border: 5px solid white;
     border-radius: 10px;
@@ -83,15 +83,32 @@ h1 {
     font-weight: bold;
 }
 
+label {
+    text-decoration: underline;
+    font-size: large;
+}
+
 #sign-in-title {
     display: block;
+    font-family: "Noto Sans JP", sans-serif;
+    font-optical-sizing: auto;
+    font-weight:bold;
+    font-style: normal;
+    font-size: 80%;
 }
 
 #email, #password {
     display: block;
     margin: auto;
+    margin-top: 5%;
 }
 
-#email, #password {
-    margin-top: 10%;
+#email {
+    font-family: "Roboto", sans-serif;
+    font-size: 0.68em;
+    padding: 0.5em 0.4em;
+    background-color: #000;
+    color: #fff;
+    border: 0.12em solid #fff;
+    border-radius: 1em;
 }
