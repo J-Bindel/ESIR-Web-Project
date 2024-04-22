@@ -1,6 +1,7 @@
 <div id="background">
   <fieldset id="sign-in-form">
     <span id="sign-in-title">Sign in</span>
+    <label for="email">E-mail :</label>
     <input *ngIf="!showPasswordInput" (keydown.enter)="showPassword()" [(ngModel)]="email" type="text" id="email" placeholder="email" />
     <input *ngIf="showPasswordInput" (keydown.enter)="login()" type="password" id="password" placeholder="password" />
     <a (click)="login()"><button>Log in</button></a>
