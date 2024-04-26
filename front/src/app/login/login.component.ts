@@ -17,23 +17,22 @@ export class LoginComponent {
   ) {
    }
   email: string = '';
+  password: string = '';
   showPasswordInput: boolean = false;
   errorMessage = '';
 
   login(): void {
-    const username: string = (document.getElementById('username') as HTMLInputElement).value;
-    const password: string = (document.getElementById('password') as HTMLInputElement).value;
-    this.api.post({ endpoint: '/auth/login', data: { username, password } }).then(response => {
+    this.api.post({ endpoint: '/auth/login', data: { email: this.email, password: this.password } }).then(response => {
       this.tokenStorageService.save(response.access_token);
       
       if (this.tokenStorageService.isLogged()) {
         window.location.href = '/users';
       }else{
-        this.errorMessage = 'Wrong username or password';
+        this.errorMessage = 'Wrong email or password';
       }
     }
     ).catch(error => {
-      console.log(error);
+      console.log(error, this.email, this.password);
       this.errorMessage = 'An error occurred during login';
     });
   }
