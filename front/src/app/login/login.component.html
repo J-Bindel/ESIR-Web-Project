@@ -1,13 +1,10 @@
-<div id="background">
-    <fieldset id="sign-in-form">
-      <span id="sign-in-title">Sign in</span>
-      <label *ngIf="!showPasswordInput" for="email">E-mail:</label>
-      <input *ngIf="!showPasswordInput" (keydown.enter)="showPassword()" [(ngModel)]="email" type="text" id="email" placeholder="e-mail" />
-      <label *ngIf="showPasswordInput" for="password">Password:</label>
-      <input *ngIf="showPasswordInput" (keydown.enter)="login()" [(ngModel)]="password"  type="password" id="password" 
-    placeholder="password" />
-      <a *ngIf="!showPasswordInput" (click)="showPassword()"><button>Next</button></a>
-      <a *ngIf="showPasswordInput" (click)="login()"><button id="last-button">Log in</button></a>
-    <div *ngIf="errorMessage" class="error-message">{{errorMessage}}</div>
-  </fieldset>
-</div>
+<fieldset>
+  <legend>Sign in</legend>
+  <label for="email">E-mail:</label>
+  <input type="text" id="email" placeholder="e-mail" />
+  <label for="password">Password:</label>
+  <input (keydown.enter)="login()" type="password" id="password" 
+placeholder="Password" />
+  <span class="error-message">{{errorMessage}}</span>
+  <div id="anchor-button"><a (click)="login()" id="log-in">Log in</a></div>
+</fieldset>
