@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { UsersListComponent } from './users-list/users-list.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { LoginComponent } from './login/login.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TokenHttpInterceptor } from './interceptors/token.interceptor';
@@ -22,6 +23,7 @@ import { NavComponent } from './nav/nav.component';
     AppRoutingModule,
     BrowserAnimationsModule,
     MatTableModule,
+    MatPaginatorModule,
     HttpClientModule,
     FormsModule
   ],
