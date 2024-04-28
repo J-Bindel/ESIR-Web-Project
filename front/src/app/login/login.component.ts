@@ -31,7 +31,11 @@ export class LoginComponent {
     }
     ).catch(error => {
       console.log(error);
-      this.errorMessage = 'An error occurred during login';
+      if (error.status === 401) {
+        this.errorMessage = 'Wrong email or password';
+      }else {
+        this.errorMessage = 'An error occurred during login';
+      }
     });
   }
 }
