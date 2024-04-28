@@ -21,7 +21,7 @@ export class AuthService {
                user_target = user;
             }
         });
-        if (user_target !== null) {
+        if (user_target !== undefined) {
             const goodPassword: boolean = await bcrypt.compare(password, user_target.password);
             if (goodPassword) {
                 return user_target;
