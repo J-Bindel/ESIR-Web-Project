@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { ApiHelperService } from '../services/api-helper.service';
 import { TokenStorageService } from '../services/token-storage.service';
-import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
@@ -16,9 +15,6 @@ export class LoginComponent {
     private tokenStorageService: TokenStorageService
   ) {
    }
-  email: string = '';
-  password: string = '';
-  showPasswordInput: boolean = false;
   errorMessage = '';
 
   login(): void {
@@ -34,14 +30,8 @@ export class LoginComponent {
       }
     }
     ).catch(error => {
-      console.log(error, this.email, this.password);
+      console.log(error);
       this.errorMessage = 'An error occurred during login';
     });
-  }
-
-  showPassword() {
-    if (this.email.trim() !== '') {
-      this.showPasswordInput = true;
-    }
   }
 }
