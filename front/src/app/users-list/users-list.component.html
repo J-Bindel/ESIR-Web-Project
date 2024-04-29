@@ -1,4 +1,11 @@
 <header class="browsing">
+  <button mat-button [matMenuTriggerFor]="menu" class="menu">Menu</button>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item>Associations</button>
+    <button mat-menu-item>Profile</button>
+    <button mat-menu-item>Deconnection</button>
+  </mat-menu>
+
   <h1>
     <span class="blue">Users<br></span>
   </h1>

@@ -23,7 +23,6 @@ header {
 
 .browsing {
     height: 10%;
-    padding-top: 1%;
 }
 
 #sign-in-header {
@@ -172,7 +171,7 @@ thead tr{
     height: 10% !important;
 }
 
-.mat-mdc-table .mdc-data-table__row {
+tbody tr {
     height: 10% !important;
 }
 
@@ -195,4 +194,13 @@ thead tr{
     --mdc-checkbox-selected-hover-icon-color: var(--main-red-color) !important;
     --mdc-checkbox-selected-icon-color: var(--main-red-color) !important;
     --mdc-checkbox-selected-pressed-icon-color: var(--main-red-color) !important;
+}
+
+.menu {
+    border: 5px solid white;
+    background-color: #fff;
+    color: #000;
+    padding: 1em 2em;
+    font-size: large;
+    font-weight: bold;
 }
