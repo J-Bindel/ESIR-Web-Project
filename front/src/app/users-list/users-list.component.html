@@ -1,67 +1,79 @@
-<header class="browsing">
-  <button mat-button [matMenuTriggerFor]="menu" class="menu">Menu</button>
+<div class="main-container">
+
+  <div class="menu-button-container">
+    
+    <button mat-button [matMenuTriggerFor]="menu" class="button-menu">Menu</button>
+    
+  </div>
+  
   <mat-menu #menu="matMenu">
-    <button mat-menu-item>Associations</button>
-    <button mat-menu-item>Profile</button>
-    <button mat-menu-item>Deconnection</button>
+    <button mat-menu-item class="blue-item">Associations</button>
+    <button mat-menu-item class="black-font">Profile</button>
+    <button mat-menu-item class="last-item red-item">Deconnection</button>
   </mat-menu>
 
-  <h1>
-    <span class="blue">Users<br></span>
-  </h1>
-</header>
-
-<div class="item-actions">
-  <button class="blue">Edit a user</button>
-  <button class="red">Delete a user</button>
-  <br>
-  <span>Create a user first line below</span>
-</div>
-
-<div class="table-paginator-container">
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+  <div class="browsing-container">
+  
+    <header class="browsing-header">
+      <h1>
+        <span class="blue">Users<br></span>
+      </h1>
+    </header>
     
-    <ng-container matColumnDef="select">
-      <th mat-header-cell *matHeaderCellDef>
-        <mat-checkbox (change)="$event ? globalToggle() : null"
-                      [checked]="selectedRows.hasValue() && isAllChecked()"
-                      [indeterminate]="selectedRows.hasValue() && !isAllChecked()">
-        </mat-checkbox>
-      </th>
-      <td mat-cell *matCellDef="let row">
-        <mat-checkbox (click)="$event.stopPropagation()"
-                      (change)="$event ? selectedRows.toggle(row) : null"
-                      [checked]="selectedRows.isSelected(row)">
-        </mat-checkbox>
-      </td>
-    </ng-container>
+    <div class="item-actions">
+      <button class="blue">Edit a user</button>
+      <button class="red">Delete a user</button>
+      <br>
+      <span>Create a user first line below</span>
+    </div>
+    
+    <div class="table-paginator-container">
+      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+        
+        <ng-container matColumnDef="select">
+          <th mat-header-cell *matHeaderCellDef>
+            <mat-checkbox (change)="$event ? globalToggle() : null"
+                          [checked]="selectedRows.hasValue() && isAllChecked()"
+                          [indeterminate]="selectedRows.hasValue() && !isAllChecked()">
+            </mat-checkbox>
+          </th>
+          <td mat-cell *matCellDef="let row">
+            <mat-checkbox (click)="$event.stopPropagation()"
+                          (change)="$event ? selectedRows.toggle(row) : null"
+                          [checked]="selectedRows.isSelected(row)">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef> No. </th>
+          <td mat-cell *matCellDef="let user"> {{user.id}} </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="lastname">
+          <th mat-header-cell *matHeaderCellDef> Lastname </th>
+          <td mat-cell *matCellDef="let user"> {{user.lastname}} </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="firstname">
+          <th mat-header-cell *matHeaderCellDef> Firstname </th>
+          <td mat-cell *matCellDef="let user"> {{user.firstname}} </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="age">
+          <th mat-header-cell *matHeaderCellDef> Age </th>
+          <td mat-cell *matCellDef="let user"> {{user.age}} </td>
+        </ng-container>
+    
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    
+      <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+                        showFirstLastButtons
+                        aria-label="Select page of stored users">
+      </mat-paginator>
+    </div>
+  </div>
 
-    <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef> No. </th>
-      <td mat-cell *matCellDef="let user"> {{user.id}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="lastname">
-      <th mat-header-cell *matHeaderCellDef> Lastname </th>
-      <td mat-cell *matCellDef="let user"> {{user.lastname}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="firstname">
-      <th mat-header-cell *matHeaderCellDef> Firstname </th>
-      <td mat-cell *matCellDef="let user"> {{user.firstname}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="age">
-      <th mat-header-cell *matHeaderCellDef> Age </th>
-      <td mat-cell *matCellDef="let user"> {{user.age}} </td>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  </table>
-
-  <mat-paginator [pageSizeOptions]="[5, 10, 20]"
-                    showFirstLastButtons
-                    aria-label="Select page of stored users">
-  </mat-paginator>
 </div>
