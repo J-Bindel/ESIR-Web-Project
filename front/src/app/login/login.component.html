@@ -1,11 +1,11 @@
 <header id="sign-in-header">
-  <img src="assets/pictures/coq.png" alt="Coq français" class="image-left"/>
+  <img src="assets/pictures/coq.png" alt="Coq français" class="header-image-left"/>
   <h1>
     <span class="blue">Administration service<br></span>
     <span class="white">For<br> </span>
     <span class="red">French associations</span>
   </h1>
-  <img src="assets/pictures/flag.png" alt="Drapeau français" class="image-right">
+  <img src="assets/pictures/flag.png" alt="Drapeau français" class="header-image-right">
 </header>
 <fieldset>
   <legend>Sign in</legend>
@@ -15,5 +15,5 @@
   <input (keydown.enter)="login()" type="password" id="password" 
 placeholder="Password" />
   <span class="error-message">{{errorMessage}}</span>
-  <div id="anchor-button"><a (click)="login()" id="sign-in">Sign in</a></div>
+  <div id="sign-in-button-container"><button (click)="login()" id="sign-in-button">Sign in</button></div>
 </fieldset>
