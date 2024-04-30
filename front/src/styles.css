@@ -34,12 +34,12 @@ header {
     background-position: center center;
 }
 
-.image-left {
+.header-image-left {
     margin-right: 15%;
     width : 10%;
 }
 
-.image-right {
+.header-image-right {
     margin-left: 15%;
     margin-right: 1%;
     width: 10%;
@@ -48,8 +48,8 @@ header {
 h1 {
     height: 100%;
     width: 100%;
-    margin-top: 2%;
-    font-size: 2.5em;
+    margin-top: 3%;
+    font-size: 3em;
     text-align: center;
     flex: 1;
 }
@@ -93,7 +93,7 @@ label {
     font-size: 0.5em;
 }
 
-#sign-in {
+#sign-in-button {
     border: 5px solid #000;
     border-radius: 10px;
     background-color: white;
@@ -103,7 +103,7 @@ label {
     font-weight: bold;
 }
 
-#anchor-button{
+#sign-in-button-container {
     display: flex;
     justify-content: center;
 }
@@ -121,31 +121,85 @@ input {
     border-radius: 10px;
 }
 
-.item-actions {
+.main-container {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+.browsing-container {
+    margin-left: 15%;
+}
+
+.menu-button-container {
+    height: 100%;
+    width: 10%;
+    float: left;
+    position: relative;
+}
+
+.button-menu {
+    height: 100%;
+    width: 100%;
+    background-color: var(--menu-grey-color);
+    text-align: center;
+    border: 4px solid rgba(255, 255, 255, 0.685);
+    border-radius: 5px;
+    color: #000;    
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.cdk-overlay-pane {
+    width: 20% !important;
+    position: static !important;
+    margin-left: 10% !important;
+}
+
+.mat-mdc-menu-content {
+    padding: 0% !important;
+}
+
+.mat-mdc-menu-item {
+    padding-left: 5% !important;
+}
+
+.mat-mdc-menu-content button span {
+    color: white !important;
+    font-weight: bold !important;
+}
+
+.blue-item {
+    background-color: var(--main-blue-color) !important;
+}
+
+.mat-mdc-menu-content .black-font span {
+    color: black !important;
+}
+
+.red-item {
+    background-color: var(--main-red-color) !important;
+}
+
+.browsing-actions-container {
     width: 100%;
     height: 10%;
-    margin-top: 1%;
+    margin-top: 3%;
     margin-bottom: 1%;
     color: white;
     font-size: 0.1em;
     text-align: center;
 }
 
-.item-actions button {
+.browsing-actions-container button {
     border: 3px solid black;
     border-radius: 10px;
     background-color: white;
-    margin: 0 5em;
+    margin: 0 4em;
     color: #000;
     padding: 1em 2em;
     font-size: large;
     font-weight: bold;
-}
-
-.item-actions span {
-    font-size: large;
-    display: block;
-    margin-top: 3%;
 }
 
 .table-paginator-container {
@@ -196,64 +250,4 @@ tbody tr {
     --mdc-checkbox-selected-hover-icon-color: var(--main-red-color) !important;
     --mdc-checkbox-selected-icon-color: var(--main-red-color) !important;
     --mdc-checkbox-selected-pressed-icon-color: var(--main-red-color) !important;
-}
-
-.main-container {
-    height: 100%;
-    width: 100%;
-    overflow: hidden;
-}
-
-.menu-button-container {
-    height: 100%;
-    width: 10%;
-    float: left;
-    position: relative;
-}
-
-.button-menu {
-    height: 100%;
-    width: 100%;
-    background-color: var(--menu-grey-color);
-    text-align: center;
-    border: 4px solid rgba(255, 255, 255, 0.685);
-    border-radius: 5px;
-    color: #000;    
-    font-size: 1.5em;
-    font-weight: bold;
-}
-
-.browsing-container {
-    margin-left: 15%;
-}
-
-.cdk-overlay-pane {
-    width: 20% !important;
-    position: static !important;
-    margin-left: 10% !important;
-}
-
-.mat-mdc-menu-content {
-    padding: 0% !important;
-}
-
-.mat-mdc-menu-item {
-    padding-left: 5% !important;
-}
-
-.mat-mdc-menu-content button span {
-    color: white !important;
-    font-weight: bold !important;
-}
-
-.blue-item {
-    background-color: var(--main-blue-color) !important;
-}
-
-.mat-mdc-menu-content .black-font span {
-    color: black !important;
-}
-
-.red-item {
-    background-color: var(--main-red-color) !important;
 }
