@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/users/user.entity';
 import { UsersService } from 'src/users/users.service';
@@ -8,44 +8,37 @@ import * as bcrypt from 'bcrypt';
 export class AuthService {
 
     constructor(
-        private userservice : UsersService, private jwtService : JwtService,
+        private userservice: UsersService, private jwtService: JwtService,
     ) {
 
     }
 
-    public async validateUser(email: string, password: string) : Promise<User> {
-        const users : User[] = await this.userservice.getAllUsers();
-        let user_target : User = undefined;
-        users.forEach((user) => {
-            if(user.email === email) {
-               user_target = user;
-            }
-        });
-        if (user_target !== undefined) {
-            const goodPassword: boolean = await bcrypt.compare(password, user_target.password);
-            if (goodPassword) {
-                return user_target;
-            }
+    public async validateUser(email: string, password: string): Promise<User> {
+        const user: User = await this.userservice.getUserByEmail(email);
+        
+        if (!user) {
+            throw new UnauthorizedException('Wrong email or password');
         }
-        return undefined;
+
+        const goodPassword = await bcrypt.compare(password, user.password);
+    
+        if (!goodPassword) {
+            throw new UnauthorizedException('Wrong email or password');
+        }
+        
+        return user;
     }
 
-    public async createPassword (id : number, password : string) : Promise<string> {
-        const users : User[] = await this.userservice.getAllUsers();
-        let user_target : User = undefined;
-        users.forEach((user) => {
-            if (user.id === id) {
-                user_target = user;
-            }
-        });
-        if (user_target !== undefined) {
-            if (user_target.password === undefined){
+    public async createPassword (id: number, password: string): Promise<string> {
+        const user: User = await this.userservice.getUserById(id);
+        if (user !== undefined) {
+            if (user.password === undefined){
                 const saltOrRounds = 10;
                 const hash = await bcrypt.hash(password, saltOrRounds);
-                user_target.password = hash;
+                user.password = hash;
             }
         }
-        return user_target.password;
+        return user.password;
     }
     
     async login(user: any) {
