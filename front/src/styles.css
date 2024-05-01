@@ -92,7 +92,7 @@ label {
     font-size: 0.5em;
 }
 
-#sign-in-button {
+button {
     border: 5px solid black;
     border-radius: 10px;
     background-color: white;
@@ -141,6 +141,7 @@ input {
 .button-menu {
     height: 90%;
     width: 100%;
+    padding: 0%;
     background-color: var(--menu-grey-color);
     text-align: center;
     border: 10px solid rgba(255, 255, 255, 0.685);
@@ -257,4 +258,98 @@ tbody tr {
     --mdc-checkbox-selected-hover-icon-color: var(--main-red-color) !important;
     --mdc-checkbox-selected-icon-color: var(--main-red-color) !important;
     --mdc-checkbox-selected-pressed-icon-color: var(--main-red-color) !important;
+}
+
+.browsing-actions-container .error-message {
+    font-size: large;
+    margin-top: 2%;
+}
+
+.popup-content {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.mat-mdc-dialog-container .mdc-dialog__content {
+    color: black !important;
+}
+
+.mat-mdc-dialog-content {
+    max-height: 80vh !important;
+    display: block !important;
+}
+
+.mat-mdc-dialog-container .mdc-dialog__surface {
+    width: 150% !important;
+}
+.mat-mdc-dialog-container .mdc-dialog__content {
+    line-height: normal !important;
+}
+.mdc-dialog__content > :first-child {
+    background-color: white;
+    color: var(--main-red-color);
+    text-decoration: underline;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.mat-mdc-dialog-content form {
+    background-color: white;
+    text-align: center;
+    margin-top: 0;
+}
+
+.mdc-dialog .mdc-dialog__content {
+    padding: 0 !important;
+}
+
+.mat-mdc-text-field-wrapper:not(.mdc-text-field--outlined) .mat-mdc-form-field-infix {
+    padding: 0% !important;
+}
+
+.input-group{
+    margin-top: 0%;
+    margin-bottom: 0%;
+}
+
+.input-group:first-child {
+    margin-top: 5%;
+}
+
+.input-group input {
+    background-color: white;
+    color: var(--main-red-color);
+    border: 2px solid black;
+    border-radius: 10px;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    font-size: large;
+    width: 95%;
+}
+
+.input-group label {
+    display: block;
+    font-weight: bold;
+    font-size: 1em;
+}
+
+.popup-buttons-container button {
+    margin: 0% 5%;
+    padding: 1em 2em;
+    font-size: large;
+    font-weight: bold;
+}
+
+.cancel-button {
+    border: 3px solid black;
+    border-radius: 10px;
+    background-color: black;
+    color: white;
+}
+
+.validate-button {
+    border: 3px solid black;
+    border-radius: 10px;
+    background-color: var(--main-blue-color);
+    color: white;
 }
