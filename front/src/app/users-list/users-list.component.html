@@ -2,7 +2,7 @@
 
   <div class="menu-button-container">
     
-    <button mat-button [matMenuTriggerFor]="menu" class="button-menu">Menu</button>
+    <button [matMenuTriggerFor]="menu" class="button-menu">Menu</button>
     
   </div>
   
@@ -21,9 +21,9 @@
     </header>
     
     <div class="browsing-actions-container">
-      <button>Create a user</button>
-      <button (click)="openUserEditPopup(selectedRows.selected[0])">Edit a user</button>
-      <button>Delete a user</button>
+      <button class="button">Create a user</button>
+      <button (click)="openUserEditPopup(selectedRows.selected[0])" class="button">Edit a user</button>
+      <button class="button">Delete a user</button>
       <div class="error-message" *ngIf="editErrorMessage">{{ editErrorMessage }}</div>
     </div>
     

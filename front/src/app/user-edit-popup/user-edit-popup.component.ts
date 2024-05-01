@@ -25,10 +25,11 @@ export class UserEditPopupComponent {
   }
 
   onSubmit(form: NgForm): void {
-    this.http.put(`http://localhost:3000/users/${this.user.id}`, form.value)
-    .subscribe(response => {
-      console.log('User updated successfully', response);
-  });
-  this.dialogRef.close();
+    console.log(`http://localhost:3000/users/${this.user.id}`, form.value)
+  //   this.http.put(`http://localhost:3000/users/${this.user.id}`, form.value)
+  //   .subscribe(response => {
+  //     console.log('User updated successfully', response);
+  // });
+  // this.dialogRef.close();
   }
 }
