@@ -65,59 +65,21 @@ h1 {
     color: var(--main-red-color);
 }
 
-fieldset {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: 60%;
-    width: 35%;
-    border: 5px solid white;
-    border-radius: 10px;
-    background-color: black;
-    color: white;
-    margin: auto;
+form {
+    display: block;
     text-align: center;
-    font-size: 2.3em;
 }
 
 .error-message {
     color: red;
     font-weight: bold;
-    font-size: 0.5em;
-    margin-bottom: 1em;
-}
-
-label {
-    text-decoration: underline;
-    font-size: 0.5em;
-}
-
-button {
-    border: 5px solid black;
-    border-radius: 10px;
-    background-color: white;
-    color: black;
-    padding: 1em 2em;
     font-size: large;
-    font-weight: bold;
+    margin-top: 2%;
 }
 
 #sign-in-button-container {
-    display: flex;
+    margin-top: 2%;
     justify-content: center;
-}
-
-input {
-    display: block;
-    margin: auto;
-    margin-top: 5%;
-    font-family: "Roboto", sans-serif;
-    font-size: 0.5em;
-    padding: 0.5em 0.4em;
-    background-color: black;
-    color: white;
-    border: 2px solid white;
-    border-radius: 10px;
 }
 
 .main-container {
@@ -270,86 +232,20 @@ tbody tr {
     overflow-y: auto;
 }
 
-.mat-mdc-dialog-container .mdc-dialog__content {
-    color: black !important;
-}
-
 .mat-mdc-dialog-content {
     max-height: 80vh !important;
     display: block !important;
 }
 
-.mat-mdc-dialog-container .mdc-dialog__surface {
-    width: 150% !important;
-}
-.mat-mdc-dialog-container .mdc-dialog__content {
-    line-height: normal !important;
-}
 .mdc-dialog__content > :first-child {
-    background-color: white;
     color: var(--main-red-color);
     text-decoration: underline;
-    margin-top: 0;
-    margin-bottom: 0;
 }
 
 .mat-mdc-dialog-content form {
-    background-color: white;
     text-align: center;
-    margin-top: 0;
 }
 
-.mdc-dialog .mdc-dialog__content {
-    padding: 0 !important;
-}
-
-.mat-mdc-text-field-wrapper:not(.mdc-text-field--outlined) .mat-mdc-form-field-infix {
-    padding: 0% !important;
-}
-
-.input-group{
-    margin-top: 0%;
-    margin-bottom: 0%;
-}
-
-.input-group:first-child {
+form .mat-mdc-form-field:first-child {
     margin-top: 5%;
-}
-
-.input-group input {
-    background-color: white;
-    color: var(--main-red-color);
-    border: 2px solid black;
-    border-radius: 10px;
-    margin-top: 1em;
-    margin-bottom: 1em;
-    font-size: large;
-    width: 95%;
-}
-
-.input-group label {
-    display: block;
-    font-weight: bold;
-    font-size: 1em;
-}
-
-.popup-buttons-container button {
-    margin: 0% 5%;
-    padding: 1em 2em;
-    font-size: large;
-    font-weight: bold;
-}
-
-.cancel-button {
-    border: 3px solid black;
-    border-radius: 10px;
-    background-color: black;
-    color: white;
-}
-
-.validate-button {
-    border: 3px solid black;
-    border-radius: 10px;
-    background-color: var(--main-blue-color);
-    color: white;
 }

@@ -7,13 +7,22 @@
   </h1>
   <img src="assets/pictures/flag.png" alt="Drapeau français" class="header-image-right">
 </header>
-<fieldset>
-  <legend>Sign in</legend>
-  <label for="email">E-mail:</label>
-  <input type="text" id="email" placeholder="e-mail" />
-  <label for="password">Password:</label>
-  <input (keydown.enter)="login()" type="password" id="password" 
-placeholder="Password" />
-  <span class="error-message">{{errorMessage}}</span>
-  <div id="sign-in-button-container"><button (click)="login()" id="sign-in-button">Sign in</button></div>
-</fieldset>
+<form>
+  <mat-form-field>
+    <mat-label>Email:</mat-label>
+    <input matInput type="email" placeholder="Email" [(ngModel)]="email" name="email">
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Password:</mat-label>
+    <input matInput type="password" placeholder="Password" [(ngModel)]="password" (keydown.enter)="login()" name="password">
+  </mat-form-field>
+
+  <div>
+    <span class="error-message">{{errorMessage}}</span>
+  </div>
+
+  <div id="sign-in-button-container">
+    <button mat-raised-button color="primary" (click)="login()">Sign in</button>
+  </div>
+</form>

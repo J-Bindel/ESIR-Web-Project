@@ -12,15 +12,31 @@ export class LoginComponent {
   constructor(
 
     private api: ApiHelperService,
-    private tokenStorageService: TokenStorageService
+    private tokenStorageService: TokenStorageService,
   ) {
    }
+  email: string = '';
+  password: string = '';
   errorMessage = '';
 
   login(): void {
-    const username: string = (document.getElementById('email') as HTMLInputElement).value;
-    const password: string = (document.getElementById('password') as HTMLInputElement).value;
-    this.api.post({ endpoint: '/auth/login', data: { username, password } })
+
+    // Reset error message
+    this.errorMessage = '';
+
+    // Check if email and password are empty
+    if (!this.email || !this.password) {
+      this.errorMessage = 'Please fill in all fields.';
+      return;
+    }
+
+    // Check if email is invalid
+    if (!this.isValidEmail(this.email)) {
+      this.errorMessage = 'Please enter a valid email address.';
+      return;
+    }
+
+    this.api.post({ endpoint: '/auth/login', data: { username: this.email, password: this.password } })
       .then(response => {
         this.tokenStorageService.save(response.access_token);
         window.location.href = '/users'; 
@@ -33,4 +49,12 @@ export class LoginComponent {
       }
     });
   }
+
+  // Function to validate email format
+  isValidEmail(email: string): boolean {
+    // Basic email validation regex
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+
 }
