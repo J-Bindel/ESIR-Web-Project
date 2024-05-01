@@ -9,16 +9,20 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatDialogModule } from '@angular/material/dialog';
 import { LoginComponent } from './login/login.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TokenHttpInterceptor } from './interceptors/token.interceptor';
 import { NavComponent } from './nav/nav.component';
+import { UserEditPopupComponent } from './user-edit-popup/user-edit-popup.component';
 @NgModule({
   declarations: [
     AppComponent,
     UsersListComponent,
     LoginComponent,
-    NavComponent
+    NavComponent,
+    UserEditPopupComponent
   ],
   imports: [
     BrowserModule,
@@ -30,6 +34,8 @@ import { NavComponent } from './nav/nav.component';
     HttpClientModule,
     FormsModule,
     MatMenuModule,
+    MatFormFieldModule,
+    MatDialogModule,
   ],
   providers: [
     {
