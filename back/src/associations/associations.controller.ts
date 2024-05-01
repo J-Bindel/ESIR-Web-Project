@@ -7,17 +7,17 @@ import { AssociationsService } from './associations.service';
 
 export class AssociationInput {
     @ApiProperty({
-        description : 'The IDs of the users being part of the association',
-        example : [1,2,3],
-        type : Array<Number>,
+        description: 'The IDs of the users being part of the association',
+        example: [1,2,3],
+        type: Array<Number>,
     })
-    public idUsers : number[];
+    public idUsers: number[];
     @ApiProperty({
-        description : 'The name of the association',
-        example : "BDE ESIR",
-        type : String,
+        description: 'The name of the association',
+        example: "BDE ESIR",
+        type: String,
     })
-    public name : string;
+    public name: string;
 }
 
 @ApiBearerAuth()
@@ -26,12 +26,12 @@ export class AssociationInput {
 export class AssociationsController {
 
     constructor(
-        private service : AssociationsService
+        private service: AssociationsService
     ){}
 
     @UseGuards(AuthGuard('jwt'))
     @Get()
-    public async getAllAssos() : Promise <Association[]> {
+    public async getAllAssos(): Promise <Association[]> {
         return await this.service.getAllAssos();
     }
 
@@ -52,9 +52,9 @@ export class AssociationsController {
         }
     })
     @Get(':id')
-    public async getAssoById(@Param() parameter) : Promise <Association> {
-        const id : number = parameter.id;
-        const asso_target : Association = await this.service.getAssoById(id);
+    public async getAssoById(@Param() parameter): Promise <Association> {
+        const id: number = parameter.id;
+        const asso_target: Association = await this.service.getAssoById(id);
         if(asso_target === undefined) {
             throw new HttpException(`Could not find a valid association with id : ${id}`, HttpStatus.NOT_FOUND);
         }
@@ -65,7 +65,7 @@ export class AssociationsController {
     @ApiOperation({summary: 'Create an association'}) 
     @ApiCreatedResponse({
         status: 200,
-        description : 'The association has been successfully created.'
+        description: 'The association has been successfully created.'
     })
     @ApiBody({
         type: AssociationInput,
@@ -79,7 +79,7 @@ export class AssociationsController {
         }
     })
     @Post()
-    public async create(@Body() input : AssociationInput) : Promise <Association> {
+    public async create(@Body() input: AssociationInput): Promise <Association> {
         return await this.service.create(input.idUsers, input.name);
     }
     
@@ -112,9 +112,9 @@ export class AssociationsController {
         }
     })
     @Put(':id')
-    public async setAsso(@Param() parameter, @Body() input : any) : Promise <Association> {
-        const id : number = parameter.id;
-        const asso_target : Association = await this.service.getAssoById(id);
+    public async setAsso(@Param() parameter, @Body() input: any): Promise <Association> {
+        const id: number = parameter.id;
+        const asso_target: Association = await this.service.getAssoById(id);
         if(asso_target === undefined) {
             throw new HttpException(`Could not find a valid association with id : ${id}`, HttpStatus.NOT_FOUND);
         }
@@ -152,9 +152,9 @@ export class AssociationsController {
         }
     })
     @Delete(':id') 
-    public async deleteAsso(@Param() parameter) : Promise <boolean> {
-        const id : number = parameter.id;
-        const asso_target : Association = await this.service.getAssoById(id);
+    public async deleteAsso(@Param() parameter): Promise <boolean> {
+        const id: number = parameter.id;
+        const asso_target: Association = await this.service.getAssoById(id);
         if(asso_target === undefined) {
             throw new HttpException(`Could not find a valid association with id : ${id}`, HttpStatus.NOT_FOUND);
         }
@@ -180,7 +180,7 @@ export class AssociationsController {
     })
     @Get(':id/members')
     public async getMembers(@Param() parameter): Promise <User[]> {
-        const id : number = parameter.id;
+        const id: number = parameter.id;
         return await this.service.getMembers(id);
     }
     

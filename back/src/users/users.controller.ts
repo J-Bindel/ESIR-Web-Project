@@ -7,33 +7,33 @@ import { UsersService } from './users.service';
 export class UserInput {
 
     @ApiProperty({
-        description : 'The firstname of the user',
-        example : "Jean",
-        type : String,
+        description: 'The firstname of the user',
+        example: "Jean",
+        type: String,
     })
-    public firstname : string;
+    public firstname: string;
 
     @ApiProperty({
-        description : 'The lastname of the user',
-        example : "Dupond",
-        type : String,
+        description: 'The lastname of the user',
+        example: "Dupond",
+        type: String,
     })
     public lastname: string;
 
     @ApiProperty ({
-        description : 'The age of the user',
-        minimum : 18,
-        default : 18,
-        type : Number,
+        description: 'The age of the user',
+        minimum: 18,
+        default: 18,
+        type: Number,
     })
-    public age : number;
+    public age: number;
 
     @ApiProperty ({
-        description : 'The email of the user',
-        example : 'jean.dupond@example.com',
-        type : String,
+        description: 'The email of the user',
+        example: 'jean.dupond@example.com',
+        type: String,
     })
-    public email : string;
+    public email: string;
 
     @ApiProperty({
         description:' The password of the user',
@@ -49,11 +49,11 @@ export class UserInput {
 export class UsersController {
     
     constructor(
-        private service : UsersService
+        private service: UsersService
     ){}
 
     @Get()
-    public async getAllUsers() : Promise <User[]> {
+    public async getAllUsers(): Promise <User[]> {
         return await this.service.getAllUsers();
     }
 
@@ -66,9 +66,9 @@ export class UsersController {
         type: UserInput,
     })
     @Get(':id')
-    public async getUserById(@Param() parameter) : Promise <User> {
-        const id : number = parameter.id;
-        const user_target : User = await this.service.getUserById(id);
+    public async getUserById(@Param() parameter): Promise <User> {
+        const id: number = parameter.id;
+        const user_target: User = await this.service.getUserById(id);
         if(user_target === null) {
             throw new HttpException(`Could not find a valid user with id : ${id}`, HttpStatus.NOT_FOUND);
         }
@@ -93,7 +93,7 @@ export class UsersController {
         }
     })
     @Post()
-    public async create(@Body() input : UserInput) : Promise <User> {
+    public async create(@Body() input: UserInput): Promise <User> {
         return await this.service.create(input.firstname, input.lastname, input.age, input.email, input.password);
     }
     
@@ -116,9 +116,9 @@ export class UsersController {
         type: UserInput,
     })
     @Put(':id')
-    public async setUser(@Param() parameter, @Body() input : any) : Promise <User> {
-        const id : number = parameter.id;
-        const user_target : User = await this.service.getUserById(id);
+    public async setUser(@Param() parameter, @Body() input: any): Promise <User> {
+        const id: number = parameter.id;
+        const user_target: User = await this.service.getUserById(id);
         if(user_target === null) {
             throw new HttpException(`Could not find a valid user with id : ${id}`, HttpStatus.NOT_FOUND);
         }
@@ -134,9 +134,9 @@ export class UsersController {
         type: UserInput,
     })
     @Delete(':id') 
-    public async deleteUser(@Param() parameter) : Promise <boolean> {
-        const id : number = parameter.id;
-        const user_target : User = await this.service.getUserById(id);
+    public async deleteUser(@Param() parameter): Promise <boolean> {
+        const id: number = parameter.id;
+        const user_target: User = await this.service.getUserById(id);
         if(user_target === null) {
             throw new HttpException(`Could not find a valid user with id : ${id}`, HttpStatus.NOT_FOUND);
         }
