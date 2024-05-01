@@ -9,15 +9,16 @@ import {
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { TokenStorageService } from '../services/token-storage.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 
 export class TokenHttpInterceptor implements HttpInterceptor {
-  router: any;
   constructor(
-    private service: TokenStorageService
+    private service: TokenStorageService,
+    private router: Router
   ) {}
   // C'est dans la fonction intercept qu'on implémente la logique
   intercept(
