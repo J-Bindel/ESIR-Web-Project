@@ -210,7 +210,7 @@ input {
 }
 
 .table-paginator-container {
-    border: 10px solid red;
+    border: 0px solid white;
     border-radius: 15px;
     background-color: white;
     height: 50%;
