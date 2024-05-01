@@ -1,0 +1,34 @@
+<mat-dialog-content class="popup-content">
+    <h1>Edit a user</h1>
+    <form #userForm="ngForm" (ngSubmit)="onSubmit(userForm)">
+        <div class="input-group">
+            <label>Lastname</label>
+            <mat-form-field>
+              <input matInput placeholder="Lastname" name="lastname" [(ngModel)]="user.lastname" required>
+            </mat-form-field>
+          </div>
+          <div class="input-group">
+            <label>Firstname</label>
+            <mat-form-field>
+              <input matInput placeholder="Firstname" name="firstname" [(ngModel)]="user.firstname" required>
+            </mat-form-field>
+          </div>
+          <div class="input-group">
+            <label>Age</label>
+            <mat-form-field>
+              <input matInput type="number" placeholder="Age" name="age" [(ngModel)]="user.age" required>
+            </mat-form-field>
+          </div>
+          <div class="input-group">
+            <label>E-mail</label>
+            <mat-form-field>
+              <input matInput type="email" placeholder="E-mail" name="email" [(ngModel)]="user.email" required>
+            </mat-form-field>
+          </div>
+          <div class="popup-buttons-container">
+            <button mat-button type="button" (click)="close()" class="cancel-button">Cancel</button>
+            <button mat-button type="submit" class="validate-button">Validate</button>
+          </div>
+    </form>
+  </mat-dialog-content>
+  
