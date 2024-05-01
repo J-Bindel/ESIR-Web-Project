@@ -1,14 +1,13 @@
 :root {
     --main-blue-color: rgb(64, 83, 175);
     --main-red-color: rgb(226, 82, 64);
-    --main-white-color: white;
     --menu-grey-color: rgba(255, 255, 255, 0.637);
   }
   
 html, body { 
     height: 100%;
     width: 100%;
-    background: rgb(0,0,0);
+    background: black;
     background: linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 45%, rgba(61,57,57,1) 100%);
     margin: 0;
     padding: 0;
@@ -59,7 +58,7 @@ h1 {
 }
 
 .white {
-    color: var(--main-white-color);
+    color: white;
 }
 
 .red {
@@ -70,8 +69,8 @@ fieldset {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 35%;
     height: 60%;
+    width: 35%;
     border: 5px solid white;
     border-radius: 10px;
     background-color: black;
@@ -94,10 +93,10 @@ label {
 }
 
 #sign-in-button {
-    border: 5px solid #000;
+    border: 5px solid black;
     border-radius: 10px;
     background-color: white;
-    color: #000;
+    color: black;
     padding: 1em 2em;
     font-size: large;
     font-weight: bold;
@@ -115,7 +114,7 @@ input {
     font-family: "Roboto", sans-serif;
     font-size: 0.5em;
     padding: 0.5em 0.4em;
-    background-color: #000;
+    background-color: black;
     color: white;
     border: 2px solid white;
     border-radius: 10px;
@@ -124,7 +123,7 @@ input {
 .main-container {
     height: 100%;
     width: 100%;
-    overflow: hidden;
+    overflow: auto;
 }
 
 .browsing-container {
@@ -136,24 +135,32 @@ input {
     width: 10%;
     float: left;
     position: relative;
+    margin-left: 20px;
 }
 
 .button-menu {
-    height: 100%;
+    height: 90%;
     width: 100%;
     background-color: var(--menu-grey-color);
     text-align: center;
-    border: 4px solid rgba(255, 255, 255, 0.685);
+    border: 10px solid rgba(255, 255, 255, 0.685);
     border-radius: 5px;
-    color: #000;    
+    color: black;    
     font-size: 1.5em;
     font-weight: bold;
+    position: absolute;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    overflow: hidden;
+    word-wrap: break-word;
 }
 
 .cdk-overlay-pane {
     width: 20% !important;
     position: static !important;
     margin-left: 10% !important;
+    margin-top: 2% !important;
 }
 
 .mat-mdc-menu-content {
@@ -182,8 +189,8 @@ input {
 }
 
 .browsing-actions-container {
-    width: 100%;
     height: 10%;
+    width: 100%;
     margin-top: 3%;
     margin-bottom: 1%;
     color: white;
@@ -196,18 +203,18 @@ input {
     border-radius: 10px;
     background-color: white;
     margin: 0 4em;
-    color: #000;
+    color: black;
     padding: 1em 2em;
     font-size: large;
     font-weight: bold;
 }
 
 .table-paginator-container {
-    border: 0px solid white;
+    border: 10px solid red;
     border-radius: 15px;
     background-color: white;
-    width: 80%;
     height: 50%;
+    width: 80%;
     margin-top: 3%;
     margin-left: auto;
     margin-right: auto;
@@ -215,8 +222,8 @@ input {
 
 table {
     box-shadow: none !important;
-    min-width: 100% !important;
     height: 80% !important;
+    min-width: 100% !important;
     margin-top: 0 !important;
     margin-left: auto !important;
     margin-right: auto !important;
