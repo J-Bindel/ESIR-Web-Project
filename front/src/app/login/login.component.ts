@@ -20,16 +20,11 @@ export class LoginComponent {
   login(): void {
     const username: string = (document.getElementById('email') as HTMLInputElement).value;
     const password: string = (document.getElementById('password') as HTMLInputElement).value;
-    this.api.post({ endpoint: '/auth/login', data: { username, password } }).then(response => {
-      this.tokenStorageService.save(response.access_token);
-      
-      if (this.tokenStorageService.isLogged()) {
-        window.location.href = '/users';
-      }else{
-        this.errorMessage = 'Wrong email or password';
-      }
-    }
-    ).catch(error => {
+    this.api.post({ endpoint: '/auth/login', data: { username, password } })
+      .then(response => {
+        this.tokenStorageService.save(response.access_token);
+        window.location.href = '/users'; 
+     }).catch(error => {
       console.log(error);
       if (error.status === 401) {
         this.errorMessage = 'Wrong email or password';
