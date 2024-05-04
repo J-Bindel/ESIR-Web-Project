@@ -17,16 +17,16 @@ export class UserEditPopupComponent {
   [key: string]: any;
 
   // Define form controls for each input field
-  lastname = new FormControl('', [Validators.required]);
-  firstname = new FormControl('', [Validators.required]);
-  age = new FormControl('', [Validators.required, Validators.pattern('^[0-9]*$')]);
-  email = new FormControl('', [Validators.required, Validators.email]);
+  lastnameFormControl = new FormControl('', [Validators.required]);
+  firstnameFormControl = new FormControl('', [Validators.required]);
+  ageFormControl = new FormControl('', [Validators.required, Validators.pattern('^[0-9]*$')]);
+  emailFormControl = new FormControl('', [Validators.required, Validators.email]);
 
   errorMessage: {[key: string]: any}  = { 
-    lastname: '',
-    firstname: '',
-    age: '',
-    email: '',
+    lastnameFormControl: '',
+    firstnameFormControl: '',
+    ageFormControl: '',
+    emailFormControl: '',
   };
   
   constructor(
@@ -36,10 +36,10 @@ export class UserEditPopupComponent {
   ) {
     this.user = data.user;
 
-     this.lastname.valueChanges.subscribe(() => this.updateErrorMessage('lastname'));
-     this.firstname.valueChanges.subscribe(() => this.updateErrorMessage('firstname'));
-     this.age.valueChanges.subscribe(() => this.updateErrorMessage('age'));
-     this.email.valueChanges.subscribe(() => this.updateErrorMessage('email'));
+     this.lastnameFormControl.valueChanges.subscribe(() => this.updateErrorMessage('lastnameFormControl'));
+     this.firstnameFormControl.valueChanges.subscribe(() => this.updateErrorMessage('firstnameFormControl'));
+     this.ageFormControl.valueChanges.subscribe(() => this.updateErrorMessage('ageFormControl'));
+     this.emailFormControl.valueChanges.subscribe(() => this.updateErrorMessage('emailFormControl'));
   }
 
   close(): void {
