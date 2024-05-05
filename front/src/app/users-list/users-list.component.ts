@@ -6,6 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { UserEditPopupComponent } from '../user-edit-popup/user-edit-popup.component';
+import { ApiHelperService } from '../services/api-helper.service';
   
   @Component({
     selector: 'app-users-list',
@@ -22,7 +23,8 @@ import { UserEditPopupComponent } from '../user-edit-popup/user-edit-popup.compo
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
-    constructor( 
+    constructor(
+      private api: ApiHelperService,
       private http: HttpClient,
       public dialog: MatDialog
     ) {}
@@ -55,20 +57,43 @@ import { UserEditPopupComponent } from '../user-edit-popup/user-edit-popup.compo
       return this.selectedRows.selected.length;
     }
 
-    openUserEditPopup(selectedUser: User): void {
+    openPasswordPrompt(selectedUser: User): void {
       if (this.getSelectedUsersCount() !== 1) {
         this.editErrorMessage = 'Select exactly one user when editing';
         return;
       }
+      const enteredPassword = prompt('Please enter the password of the selected user:');
+      if (enteredPassword !== null) {
+        const isPasswordCorrect = this.verifyPassword(selectedUser, enteredPassword);
+        if (isPasswordCorrect) {
+          this.openUserEditPopup(selectedUser, enteredPassword);
+        } else {
+          alert('Incorrect password. Please try again.');
+        }
+      }
+    }
 
+    openUserEditPopup(selectedUser: User, password: string): void {
       const dialogRef = this.dialog.open(UserEditPopupComponent, {
-        data: { user: selectedUser }
+        data: { user: selectedUser, password: password }
       });
 
       dialogRef.afterClosed().subscribe(result => {
         console.log('The dialog was closed');
       });
     }
+
+    verifyPassword(selectedUser: User, password: string): boolean {
+      this.api.post({ endpoint: '/auth/login', data: { username: selectedUser.email, password: password } })
+      .then(response => {
+        return true;
+      }).catch(error => {
+        console.log(error);
+        return false;
+      });
+      return false;
+    }
+
 }
 
 export interface User {
