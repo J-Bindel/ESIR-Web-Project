@@ -1,5 +1,4 @@
 import { Component, Inject } from '@angular/core';
-import { NgForm } from '@angular/forms';
 import { FormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { User } from '../users-list/users-list.component';
@@ -19,7 +18,7 @@ export class UserEditPopupComponent {
   // Define form controls for each input field
   lastname = new FormControl('', [Validators.required]);
   firstname = new FormControl('', [Validators.required]);
-  age = new FormControl('', [Validators.required, Validators.pattern('^[0-9]*$')]);
+  age = new FormControl('', [Validators.required]);
   email = new FormControl('', [Validators.required, Validators.email]);
 
   errorMessage: {[key: string]: any}  = { 
@@ -36,25 +35,30 @@ export class UserEditPopupComponent {
   ) {
     this.user = data.user;
 
-     this.lastname.valueChanges.subscribe(() => this.updateErrorMessage('lastname'));
-     this.firstname.valueChanges.subscribe(() => this.updateErrorMessage('firstname'));
-     this.age.valueChanges.subscribe(() => this.updateErrorMessage('age'));
-     this.email.valueChanges.subscribe(() => this.updateErrorMessage('email'));
+    this.lastname.setValue(this.user.lastname);
+    this.firstname.setValue(this.user.firstname);
+    this.age.setValue(this.user.age.toString());
+    this.email.setValue(this.user.email);
+
+    this.lastname.valueChanges.subscribe(() => this.updateErrorMessage('lastname'));
+    this.firstname.valueChanges.subscribe(() => this.updateErrorMessage('firstname'));
+    this.age.valueChanges.subscribe(() => this.updateErrorMessage('age'));
+    this.email.valueChanges.subscribe(() => this.updateErrorMessage('email'));
   }
 
   close(): void {
     this.dialogRef.close();
   }
 
-  onSubmit(form: NgForm): void {
-    console.log(`http://localhost:3000/users/${this.user.id}`, form.value)
-    this.api.put({ endpoint: '/users/', data: { lastname: this.user.lastname, firstname: this.user.firstname, age: this.user.age, email: this.user.email }, queryParams: { id: this.user.id }})
-      .then(() => {
+  onSubmit(): void {
+    this.api.put({ endpoint: `/users/${this.user.id}`, data: { firstname: this.firstname.value, lastname: this.lastname.value, age: this.age.value, email: this.email.value, password: this.user.password } })
+    .then(() => 
+      { console.log(`User ${this.user.id} updated successfully`);
         this.dialogRef.close();
-        window.location.href = '/users'; 
-      }).catch(error => {
-        console.log(error);
-      });
+        window.location.href = '/users';
+    }).catch(error => {
+      console.log(error);
+    });
   }
 
   updateErrorMessage(fieldName: string) {
@@ -62,8 +66,6 @@ export class UserEditPopupComponent {
     if (control.invalid && control.dirty) {
       if (control.hasError('required')) {
         this.errorMessage[fieldName] = 'This field is required';
-      } else if (control.hasError('pattern')) {
-        this.errorMessage[fieldName] = 'Please enter a valid number';
       } else if (control.hasError('email')) {
         this.errorMessage[fieldName] = 'Please enter a valid email';
       }
