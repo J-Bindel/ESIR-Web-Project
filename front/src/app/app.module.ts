@@ -17,18 +17,21 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { LoginComponent } from './login/login.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TokenHttpInterceptor } from './interceptors/token.interceptor';
 import { NavComponent } from './nav/nav.component';
 import { UserEditPopupComponent } from './user-edit-popup/user-edit-popup.component';
+import { PasswordPromptComponent } from './password-prompt/password-prompt.component';
 @NgModule({
   declarations: [
     AppComponent,
     UsersListComponent,
     LoginComponent,
     NavComponent,
-    UserEditPopupComponent
+    UserEditPopupComponent,
+    PasswordPromptComponent
   ],
   imports: [
     BrowserModule,
@@ -49,6 +52,7 @@ import { UserEditPopupComponent } from './user-edit-popup/user-edit-popup.compon
     MatToolbarModule,
     MatSidenavModule,
     MatListModule,
+    MatSnackBarModule,
   ],
   providers: [
     {

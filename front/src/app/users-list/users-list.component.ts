@@ -4,9 +4,11 @@ import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
 import { UserEditPopupComponent } from '../user-edit-popup/user-edit-popup.component';
 import { ApiHelperService } from '../services/api-helper.service';
+import { PasswordPromptComponent } from '../password-prompt/password-prompt.component';
   
   @Component({
     selector: 'app-users-list',
@@ -26,7 +28,8 @@ import { ApiHelperService } from '../services/api-helper.service';
     constructor(
       private api: ApiHelperService,
       private http: HttpClient,
-      public dialog: MatDialog
+      public dialog: MatDialog,
+      private _snackBar: MatSnackBar
     ) {}
     ngAfterViewInit(): void {
       this.dataSource.paginator = this.paginator;
@@ -57,20 +60,26 @@ import { ApiHelperService } from '../services/api-helper.service';
       return this.selectedRows.selected.length;
     }
 
-    openPasswordPrompt(selectedUser: User): void {
+    async openPasswordPrompt(selectedUser: User): Promise<void> {
       if (this.getSelectedUsersCount() !== 1) {
         this.editErrorMessage = 'Select exactly one user when editing';
         return;
       }
-      const enteredPassword = prompt('Please enter the password of the selected user:');
-      if (enteredPassword !== null) {
-        const isPasswordCorrect = this.verifyPassword(selectedUser, enteredPassword);
-        if (isPasswordCorrect) {
-          this.openUserEditPopup(selectedUser, enteredPassword);
-        } else {
-          alert('Incorrect password. Please try again.');
+      const dialogRef = this.dialog.open(PasswordPromptComponent);
+      dialogRef.afterClosed().subscribe(async password => {
+        if (password) {
+          try {
+            const isPasswordCorrect = await this.verifyPassword(selectedUser, password);
+          if (isPasswordCorrect) {
+            this.openUserEditPopup(selectedUser, password);
+          } else {
+            this.showSnackBar('Incorrect password. Please try again.');
+          }
+        } catch (error) {
+          console.error(error);
         }
       }
+    });
     }
 
     openUserEditPopup(selectedUser: User, password: string): void {
@@ -83,15 +92,22 @@ import { ApiHelperService } from '../services/api-helper.service';
       });
     }
 
-    verifyPassword(selectedUser: User, password: string): boolean {
-      this.api.post({ endpoint: '/auth/login', data: { username: selectedUser.email, password: password } })
-      .then(response => {
+    async verifyPassword(selectedUser: User, password: string): Promise<boolean> {
+      try {
+        const response = await this.api.post({ endpoint: '/auth/login', data: { username: selectedUser.email, password: password } });
         return true;
-      }).catch(error => {
+      } catch (error) {
         console.log(error);
+        this.editErrorMessage = 'Incorrect selected user password';
         return false;
+      }
+    }
+
+    showSnackBar(message: string): void {
+      this._snackBar.open(message, 'Close', {
+        duration: 3000,
+        verticalPosition: 'top',
       });
-      return false;
     }
 
 }
