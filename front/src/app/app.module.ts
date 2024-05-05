@@ -24,6 +24,7 @@ import { TokenHttpInterceptor } from './interceptors/token.interceptor';
 import { NavComponent } from './nav/nav.component';
 import { UserEditPopupComponent } from './user-edit-popup/user-edit-popup.component';
 import { PasswordPromptComponent } from './password-prompt/password-prompt.component';
+import { AssociationsListComponent } from './associations-list/associations-list.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -31,7 +32,8 @@ import { PasswordPromptComponent } from './password-prompt/password-prompt.compo
     LoginComponent,
     NavComponent,
     UserEditPopupComponent,
-    PasswordPromptComponent
+    PasswordPromptComponent,
+    AssociationsListComponent
   ],
   imports: [
     BrowserModule,
