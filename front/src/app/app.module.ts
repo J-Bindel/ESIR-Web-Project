@@ -2,8 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { FormsModule } from '@angular/forms';
-import { FormControl, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UsersListComponent } from './users-list/users-list.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTableModule } from '@angular/material/table';
@@ -32,8 +31,7 @@ import { UserEditPopupComponent } from './user-edit-popup/user-edit-popup.compon
     AppRoutingModule,
     BrowserAnimationsModule,
     FormsModule,
-    FormControl,
-    Validators,
+    ReactiveFormsModule,
     HttpClientModule,
     MatTableModule,
     MatPaginatorModule,
