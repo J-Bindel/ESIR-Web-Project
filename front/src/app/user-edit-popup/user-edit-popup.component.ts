@@ -30,7 +30,7 @@ export class UserEditPopupComponent {
   
   constructor(
     public dialogRef: MatDialogRef<UserEditPopupComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { user: User },
+    @Inject(MAT_DIALOG_DATA) public data: { password: string, user: User },
     private api: ApiHelperService,
   ) {
     this.user = data.user;
@@ -51,7 +51,14 @@ export class UserEditPopupComponent {
   }
 
   onSubmit(): void {
-    this.api.put({ endpoint: `/users/${this.user.id}`, data: { firstname: this.firstname.value, lastname: this.lastname.value, age: this.age.value, email: this.email.value, password: this.user.password } })
+    const userData = {
+      firstname: this.firstname.value,
+      lastname: this.lastname.value,
+      age: this.age.value,
+      email: this.email.value,
+      password: this.data.password
+  };
+    this.api.put({ endpoint: `/users/${this.user.id}`, data: userData })
     .then(() => 
       { console.log(`User ${this.user.id} updated successfully`);
         this.dialogRef.close();
