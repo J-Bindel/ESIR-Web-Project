@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatSidenav } from '@angular/material/sidenav';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
@@ -18,9 +17,6 @@ import { PasswordPromptComponent } from '../password-prompt/password-prompt.comp
   })
   
   export class UsersListComponent implements AfterViewInit {
-    @ViewChild(MatSidenav)
-    sidenav!: MatSidenav;
-    isCollapsed = true;
     displayedColumns: string[] = ['select', 'id', 'lastname', 'firstname', 'age', 'e-mail'];
     dataSource = new MatTableDataSource<User>();
     selectedRows: SelectionModel<User> = new SelectionModel<User>(true, []);
@@ -62,11 +58,6 @@ import { PasswordPromptComponent } from '../password-prompt/password-prompt.comp
     
     getSelectedUsersCount(): number {
       return this.selectedRows.selected.length;
-    }
-
-    toggleMenu() {
-      this.sidenav.open();
-      this.isCollapsed = !this.isCollapsed;
     }
 
     async openPasswordPrompt(selectedUser: User): Promise<void> {

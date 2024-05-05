@@ -1,1 +1,41 @@
-<router-outlet></router-outlet>
+<mat-toolbar class="blue-background" *ngIf="router.url !== '/login'">
+    <button mat-icon-button aria-label="Menu icon" (click)="toggleMenu()">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <h1 class="white">
+        Administration service
+    </h1>
+</mat-toolbar>
+
+<mat-sidenav-container autosize *ngIf="router.url !== '/login'">
+
+    <mat-sidenav [ngClass]="!isCollapsed ? 'expanded' : ''" opened="true" mode="side">
+      <mat-nav-list>
+        <a mat-list-item>
+          <span class="entry">
+            <mat-icon>house</mat-icon>
+            <span *ngIf="!isCollapsed">Dashboard</span>
+          </span>
+        </a>
+        <a mat-list-item>
+          <span class="entry">
+            <mat-icon>house</mat-icon>
+            <span *ngIf="!isCollapsed">Dashboard</span>
+          </span>
+        </a>
+        <a mat-list-item>
+          <span class="entry">
+            <mat-icon>house</mat-icon>
+            <span *ngIf="!isCollapsed">Dashboard</span>
+          </span>
+        </a>
+      </mat-nav-list>
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+        <router-outlet></router-outlet>
+    </mat-sidenav-content>
+
+</mat-sidenav-container>
+
+<router-outlet *ngIf="router.url === '/login'"></router-outlet>

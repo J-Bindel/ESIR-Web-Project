@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+import { MatSidenav } from '@angular/material/sidenav';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +8,18 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'fr-administration-front';
+
+  @ViewChild(MatSidenav)
+  sidenav!: MatSidenav;
+    
+  isCollapsed = true;
+
+  constructor(
+    public router: Router
+  ) { }
+
+  toggleMenu() {
+    this.sidenav.open();
+    this.isCollapsed = !this.isCollapsed;
+  }
 }
