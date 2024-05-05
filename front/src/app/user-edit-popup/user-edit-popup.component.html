@@ -2,25 +2,25 @@
   <div>
     <span>Edit a user</span>
   </div>  
-  <form #userForm="ngForm" (ngSubmit)="onSubmit(userForm)">
+  <form (ngSubmit)="onSubmit()">
     <mat-form-field>
       <mat-label>Lastname</mat-label>
-      <input matInput placeholder="Lastname" name="lastname" [(ngModel)]="user.lastname" [formControl]="lastname">
+      <input matInput placeholder="Lastname" name="lastname" [formControl]="lastname">
       <mat-error *ngIf="lastname.invalid && lastname.dirty">{{ errorMessage['lastname'] }}</mat-error>
     </mat-form-field>
     <mat-form-field>
       <mat-label>Firstname</mat-label>
-      <input matInput placeholder="Firstname" name="firstname" [(ngModel)]="user.firstname" [formControl]="firstname">
+      <input matInput placeholder="Firstname" name="firstname" [formControl]="firstname">
       <mat-error *ngIf="firstname.invalid && firstname.dirty">{{ errorMessage['firstname'] }}</mat-error>
     </mat-form-field>
     <mat-form-field>
       <mat-label>Age</mat-label>
-      <input matInput type="number" placeholder="Age" name="age" [(ngModel)]="user.age" [formControl]="age">
+      <input matInput type="number" placeholder="Age" name="age" [formControl]="age">
       <mat-error *ngIf="age.invalid && age.dirty">{{ errorMessage['age'] }}</mat-error>
     </mat-form-field>
     <mat-form-field>
       <mat-label>E-mail</mat-label>
-      <input matInput type="email" placeholder="E-mail" name="email" [(ngModel)]="user.email" [formControl]="email">
+      <input matInput type="email" placeholder="E-mail" name="email" [formControl]="email">
       <mat-error *ngIf="email.invalid && email.dirty">{{ errorMessage['email'] }}</mat-error>
     </mat-form-field>
     <div class="popup-buttons-container">
