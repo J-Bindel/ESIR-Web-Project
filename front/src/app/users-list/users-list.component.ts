@@ -77,4 +77,5 @@ export interface User {
   firstname: string;
   age: number;
   email: string;
+  password: string;
 }
