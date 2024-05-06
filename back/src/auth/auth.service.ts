@@ -33,20 +33,16 @@ export class AuthService {
         return user;
     }
 
-    public async validateAssociation(id: number, password: string): Promise<Association> {
+    public async validateAssociation(id: number, password: string): Promise<boolean> {
         const association: Association = await this.associationService.getAssoById(id);
 
         if (!association) {
-            throw new UnauthorizedException('Wrong id or password');
+            return false;
         }
 
         const goodPassword = await bcrypt.compare(password, association.password);
 
-        if (!goodPassword) {
-            throw new UnauthorizedException('Wrong id or password');
-        }
-
-        return association;
+        return goodPassword;
     }
 
     async userLogin(user: any) {
