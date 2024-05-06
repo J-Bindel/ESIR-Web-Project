@@ -62,7 +62,7 @@ export class UserEditPopupComponent {
     .then(() => 
       { console.log(`User ${this.user.id} updated successfully`);
         this.dialogRef.close();
-        window.location.href = '/users';
+        window.location.reload();
     }).catch(error => {
       console.log(error);
     });
