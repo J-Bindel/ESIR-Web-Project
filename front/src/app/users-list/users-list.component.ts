@@ -1,11 +1,9 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Observable } from 'rxjs';
 import { UserEditPopupComponent } from '../user-edit-popup/user-edit-popup.component';
 import { ApiHelperService } from '../services/api-helper.service';
 import { PasswordPromptComponent } from '../password-prompt/password-prompt.component';
@@ -19,23 +17,18 @@ import { PasswordPromptComponent } from '../password-prompt/password-prompt.comp
   export class UsersListComponent implements AfterViewInit {
     displayedColumns: string[] = ['select', 'id', 'lastname', 'firstname', 'age', 'e-mail'];
     dataSource = new MatTableDataSource<User>();
+    @ViewChild(MatPaginator) paginator: MatPaginator;
     selectedRows: SelectionModel<User> = new SelectionModel<User>(true, []);
     editErrorMessage = '';
 
-
-    @ViewChild(MatPaginator) paginator: MatPaginator;
-
     constructor(
       private api: ApiHelperService,
-      private http: HttpClient,
       public dialog: MatDialog,
       private _snackBar: MatSnackBar
     ) {}
     ngAfterViewInit(): void {
       this.dataSource.paginator = this.paginator;
-      this.fetchData().subscribe((data) => {
-        this.dataSource.data = data;
-      });
+      this.fetchUsersData();
     }
 
     globalToggle() {
@@ -52,8 +45,14 @@ import { PasswordPromptComponent } from '../password-prompt/password-prompt.comp
       return numberChecked === numberRows;
     }
 
-    fetchData(): Observable<User[]> {
-      return this.http.get<User[]>('http://localhost:3000/users');
+    fetchUsersData() {
+      this.api.get({ endpoint: '/users' })
+      .then((data) => {
+        this.dataSource.data = data;
+      })
+      .catch((error) => {
+        console.error(error);
+      });
     }
     
     getSelectedUsersCount(): number {
