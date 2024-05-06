@@ -18,6 +18,13 @@ export class AssociationInput {
         type: String,
     })
     public name: string;
+
+    @ApiProperty({
+        description: 'The password of the association',
+        example: "valid_password",
+        type: String,
+    })
+    public password: string;
 }
 
 @ApiBearerAuth()
@@ -69,29 +76,29 @@ export class AssociationsController {
     })
     @ApiBody({
         type: AssociationInput,
-        description: "An association with an array of UserIds and an name",
+        description: "An association with an array of UserIds, a name and a password",
         examples: {
             a: {
                 summary: "21st century Fox",
                 description: "Association example",
-                value: {idUsers:[1,2,3,4], name: "21st century Fox"} as AssociationInput
+                value: {idUsers:[1,2,3,4], name: "21st century Fox", password: "valid_password"} as AssociationInput
             }
         }
     })
     @Post()
     public async create(@Body() input: AssociationInput): Promise <Association> {
-        return await this.service.create(input.idUsers, input.name);
+        return await this.service.create(input.idUsers, input.name, input.password);
     }
     
     @UseGuards(AuthGuard('jwt'))
     @ApiBody({
         type: AssociationInput,
-        description: "An with an array of Users and a name",
+        description: "An association with an array of User, a name and a password",
         examples: {
             a: {
                 summary: "Warner Compagny",
                 description: "Association example",
-                value: {idUsers: [1,2,3,4], name: "Universal"} as AssociationInput
+                value: {idUsers: [1,2,3,4], name: "Universal", password: "valid_password"} as AssociationInput
             }
         }
     })
@@ -119,19 +126,19 @@ export class AssociationsController {
             throw new HttpException(`Could not find a valid association with id : ${id}`, HttpStatus.NOT_FOUND);
         }
         
-        return await this.service.setAsso(id, input.idUsers, input.name);
+        return await this.service.setAsso(id, input.idUsers, input.name, input.password);
 
         }    
 
     @UseGuards(AuthGuard('jwt'))
     @ApiBody({
         type: AssociationInput,
-        description: "An with an array of Users and a name",
+        description: "An with an array of Users, a name and a password",
         examples: {
             a: {
                 summary: "Warner Compagny",
                 description: "Association example",
-                value: {idUsers: [1,2,3,4], name: "Universal"} as AssociationInput
+                value: {idUsers: [1,2,3,4], name: "Universal", password: "valid_password"} as AssociationInput
             }
         }
     })

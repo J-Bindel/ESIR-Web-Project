@@ -10,5 +10,7 @@ export class Association {
     public users : User[];
     @Column()
     public name : string;
+    @Column()
+    public password: string;
 }
 

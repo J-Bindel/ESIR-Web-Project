@@ -4,6 +4,7 @@ import { UsersService } from 'src/users/users.service';
 import { Association } from './association.entity';
 import { Equal, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AssociationsService {
@@ -22,24 +23,30 @@ export class AssociationsService {
         return await this.repository.findOne({where: {id: Equal(id)}});
      }
      
-    public async create(idUsers: number[], name: string): Promise <Association> {
+    public async create(idUsers: number[], name: string, password: string): Promise <Association> {
+        const saltOrRounds = 10;
+        const hash = await bcrypt.hash(password, saltOrRounds);
         const users: User[] = [];
         idUsers.forEach(async id => {users.push(await this.service.getUserById(id))});
-        const newAsso: Association = this.repository.create({
+        const newAssociation: Association = await this.repository.create({
             users: users, 
-            name: name
+            name: name,
+            password: hash
         });
-        await this.repository.save(newAsso);
-        return newAsso;
+        await this.repository.save(newAssociation);
+        return newAssociation;
      }
      
-    public async setAsso(id: number, idUsers: number [], name: string): Promise <Association> {
+    public async setAsso(id: number, idUsers: number [], name: string, password: string): Promise <Association> {
+        const saltOrRounds = 10;
+        const hash = await bcrypt.hash(password, saltOrRounds);
         if (idUsers !== undefined && name !== undefined) {
             const users: User [] = [];
             idUsers.forEach(async id => {users.push(await this.service.getUserById(id))});
             const asso: Association = await this.repository.findOne({where: {id: Equal(id)}});
             asso.users = users;
             asso.name = name;
+            asso.password = hash;
             await this.repository.save(asso);
             return asso;
         }
