@@ -3,18 +3,22 @@ import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/users/user.entity';
 import { UsersService } from 'src/users/users.service';
 import * as bcrypt from 'bcrypt';
+import { Association } from 'src/associations/association.entity';
+import { AssociationsService } from 'src/associations/associations.service';
 
 @Injectable()
 export class AuthService {
 
     constructor(
-        private userservice: UsersService, private jwtService: JwtService,
+        private userService: UsersService,
+        private associationService: AssociationsService,
+        private jwtService: JwtService,
     ) {
 
     }
 
     public async validateUser(email: string, password: string): Promise<User> {
-        const user: User = await this.userservice.getUserByEmail(email);
+        const user: User = await this.userService.getUserByEmail(email);
         
         if (!user) {
             throw new UnauthorizedException('Wrong email or password');
@@ -29,22 +33,27 @@ export class AuthService {
         return user;
     }
 
-    public async createPassword (id: number, password: string): Promise<string> {
-        const user: User = await this.userservice.getUserById(id);
-        if (user !== undefined) {
-            if (user.password === undefined){
-                const saltOrRounds = 10;
-                const hash = await bcrypt.hash(password, saltOrRounds);
-                user.password = hash;
-            }
+    public async validateAssociation(id: number, password: string): Promise<Association> {
+        const association: Association = await this.associationService.getAssoById(id);
+
+        if (!association) {
+            throw new UnauthorizedException('Wrong id or password');
         }
-        return user.password;
+
+        const goodPassword = await bcrypt.compare(password, association.password);
+
+        if (!goodPassword) {
+            throw new UnauthorizedException('Wrong id or password');
+        }
+
+        return association;
     }
-    
-    async login(user: any) {
+
+    async userLogin(user: any) {
         const payload = { username: user.id };
         return {
             access_token: this.jwtService.sign(payload),
         };
     }
+
 }
