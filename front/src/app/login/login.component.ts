@@ -36,7 +36,7 @@ export class LoginComponent {
       return;
     }
 
-    this.api.post({ endpoint: '/auth/login', data: { username: this.email, password: this.password } })
+    this.api.post({ endpoint: '/auth/user/login', data: { username: this.email, password: this.password } })
       .then(response => {
         this.tokenStorageService.save(response.access_token);
         window.location.href = '/users'; 
