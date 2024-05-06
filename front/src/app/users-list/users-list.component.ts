@@ -31,6 +31,16 @@ import { PasswordPromptComponent } from '../password-prompt/password-prompt.comp
       this.fetchUsersData();
     }
 
+    fetchUsersData() {
+      this.api.get({ endpoint: '/users' })
+      .then((data) => {
+        this.dataSource.data = data;
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    }
+
     globalToggle() {
       if (this.isAllChecked()) {
         this.selectedRows.clear();
@@ -43,16 +53,6 @@ import { PasswordPromptComponent } from '../password-prompt/password-prompt.comp
       const numberChecked = this.selectedRows.selected.length;
       const numberRows = this.dataSource.data.length;
       return numberChecked === numberRows;
-    }
-
-    fetchUsersData() {
-      this.api.get({ endpoint: '/users' })
-      .then((data) => {
-        this.dataSource.data = data;
-      })
-      .catch((error) => {
-        console.error(error);
-      });
     }
     
     getSelectedUsersCount(): number {
