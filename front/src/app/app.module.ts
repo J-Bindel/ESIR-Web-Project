@@ -25,6 +25,7 @@ import { NavComponent } from './nav/nav.component';
 import { UserEditPopupComponent } from './user-edit-popup/user-edit-popup.component';
 import { PasswordPromptComponent } from './password-prompt/password-prompt.component';
 import { AssociationsListComponent } from './associations-list/associations-list.component';
+import { AssociationEditPopupComponent } from './association-edit-popup/association-edit-popup.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -33,7 +34,8 @@ import { AssociationsListComponent } from './associations-list/associations-list
     NavComponent,
     UserEditPopupComponent,
     PasswordPromptComponent,
-    AssociationsListComponent
+    AssociationsListComponent,
+    AssociationEditPopupComponent
   ],
   imports: [
     BrowserModule,

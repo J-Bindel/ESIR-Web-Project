@@ -1,0 +1,30 @@
+<mat-dialog-content class="popup-content">
+  <div>
+    <span>Edit an association</span>
+  </div>
+  <form (ngSubmit)="onSubmit()">
+      <mat-form-field>
+        <mat-label>Name</mat-label>
+          <input matInput placeholder="Name" name="name" [formControl]="name">
+          <mat-error *ngIf="name.invalid && name.dirty">{{ errorMessage['name'] }}</mat-error>
+      </mat-form-field>
+      
+      <div *ngFor="let user of users">
+        <mat-form-field>
+          <mat-label>{{ user.lastname }}, {{ user.firstname }}</mat-label>
+          <mat-select [formControl]="user.addToGroupControl">
+            <mat-option [value]="'Yes'">Yes</mat-option>
+            <mat-option [value]="'No'">No</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <mat-form-field>
+        <mat-label>Password</mat-label>
+        <input matInput type="password" placeholder="Password" name="password" [formControl]="password">
+        <mat-error *ngIf="password.invalid && password.dirty">{{ errorMessage['password'] }}</mat-error>
+      </mat-form-field>
+    
+      <button mat-button type="submit">Submit</button>
+    </form>
+</mat-dialog-content>
