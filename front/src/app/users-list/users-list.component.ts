@@ -7,6 +7,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserEditPopupComponent } from '../user-edit-popup/user-edit-popup.component';
 import { ApiHelperService } from '../services/api-helper.service';
 import { PasswordPromptComponent } from '../password-prompt/password-prompt.component';
+import { UserService } from '../user.service';
   
   @Component({
     selector: 'app-users-list',
@@ -23,6 +24,7 @@ import { PasswordPromptComponent } from '../password-prompt/password-prompt.comp
 
     constructor(
       private api: ApiHelperService,
+      private userService: UserService,
       public dialog: MatDialog,
       private _snackBar: MatSnackBar
     ) {}
@@ -35,6 +37,7 @@ import { PasswordPromptComponent } from '../password-prompt/password-prompt.comp
       this.api.get({ endpoint: '/users' })
       .then((data) => {
         this.dataSource.data = data;
+        this.userService.setUsers(data);
       })
       .catch((error) => {
         console.error(error);
