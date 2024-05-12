@@ -22,10 +22,6 @@ header {
     align-items: center;
 }
 
-.browsing-header {
-    height: 10%;
-}
-
 #sign-in-header {
     background-image: url(assets/pictures/baguette.png);
     background-size: 30% auto;
@@ -100,6 +96,11 @@ form {
     justify-content: center;
 }
 
+#sign-in-button {
+    font-size: large;
+    padding: 1.5em 1em;
+}
+
 mat-toolbar h1 {
     height: auto;
     width: auto;
@@ -138,20 +139,12 @@ mat-sidenav-content {
     height: 20%;
     width: 100%;
     margin-top: 3%;
-    color: white;
-    font-size: 0.1em;
     text-align: center;
 }
 
-.browsing-actions-container button {
-    border: 3px solid black;
-    border-radius: 10px;
-    background-color: white;
-    margin: 0 4em;
-    color: black;
-    padding: 1em 2em;
-    font-size: large;
-    font-weight: bold;
+.mat-button {
+    margin: 1em 1em;
+    color: var(--main-red-color) !important;
 }
 
 .table-paginator-container {
