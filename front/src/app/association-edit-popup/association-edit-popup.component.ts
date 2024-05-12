@@ -13,14 +13,13 @@ import { UserService } from '../user.service';
 })
 export class AssociationEditPopupComponent implements OnInit{
   association: Association;
-  users: User[] = [];
+  users: { user: User, addToAssociationControl:  FormControl }[] = [];
 
   // Define index signature
   [key: string]: any;
 
   // Define form controls for each input field
   name = new FormControl('', [Validators.required]);
-  userControls: FormControl[] = [];
   password = new FormControl('', [Validators.required]);
   
   errorMessage: {[key: string]: any}  = { 
@@ -44,42 +43,38 @@ export class AssociationEditPopupComponent implements OnInit{
   }
 
     ngOnInit(): void {
-        this.userService.users$.subscribe((users => {
-          this.users = users;
-        }));
-        this.association.usersId.forEach((userId) => {
-          const userControl = new FormControl(this.isUserInAssociation(userId));
-          this.userControls.push(userControl);
-        });
+      this.userService.users$.subscribe((users => {
+        users.map(user => ({
+          user,
+          addToGroupControl: new FormControl('')
+        }))
+      }));
     }
 
-  isUserInAssociation(userId: string): boolean {
-    return this.association.usersId.includes(userId);
-  }
-  
   close(): void {
     this.dialogRef.close();
   }
 
   onSubmit(): void {
-    const usersToAdd = this.userControls
-    .map((control, index) => ({
-      userId: this.users[index].id,
-      addToAssociation: control.value
-    }))
-    .filter(user => user.addToAssociation === "Yes")
-    .map(user => user.userId)
-    // Retrieve the users names
-    const userNamesToAdd = usersToAdd.map((userId) => {
-      const user = this.users.find((user) => user.id === +userId);
-      return user ? user.firstname + ' ' + user.lastname : '';
-    })
+    const usersToAdd = this.users
+    .filter(userAssociation => userAssociation.addToAssociationControl.value === 'Yes')
+    .map(userAssociation => ({
+      userId: userAssociation.user.id,
+      addToAssociation: userAssociation.addToAssociationControl.value
+    }));
+    
+    // Retrieve the users' names
+    const userNamesToAdd = usersToAdd.map(({ userId }) => {
+      const user = this.users.find(userGroup => userGroup.user.id === userId);
+      return user ? `${user.user.firstname} ${user.user.lastname}` : '';
+    });
+    
     const associationData = {
       name: this.name.value,
-      usersId: usersToAdd,
+      usersId: usersToAdd.map(user => user.userId),
       usersName: userNamesToAdd,
       password: this.password.value
-    }
+    };
 
     this.api.put({ endpoint: `/associations/${this.association.id}`, data: associationData})
     .then(() => {
