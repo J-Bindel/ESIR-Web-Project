@@ -11,8 +11,8 @@
       
       <div *ngFor="let user of users">
         <mat-form-field>
-          <mat-label>{{ user.lastname }}, {{ user.firstname }}</mat-label>
-          <mat-select [formControl]="user.addToGroupControl">
+          <mat-label>{{ user.user.lastname }}, {{ user.user.firstname }}</mat-label>
+          <mat-select [formControl]="user.addToAssociationControl">
             <mat-option [value]="'Yes'">Yes</mat-option>
             <mat-option [value]="'No'">No</mat-option>
           </mat-select>
