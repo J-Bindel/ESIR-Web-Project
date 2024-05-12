@@ -56,11 +56,15 @@ export class AssociationsListComponent implements AfterViewInit{
     });
   }
 
-  replaceUserIdsWithNames(ids: number[]): string[] {
-    return ids.map((id) => {
-      const user = this.users.find((user) => user.id === id);
-      return user ? user.firstname + ' ' + user.lastname : '';
+  replaceUserIdsWithNames(ids: number[]): string {
+    const userNames: string[] = [];
+    ids.forEach((id) => {
+        const user = this.users.find((user) => user.id === id);
+        if (user) {
+            userNames.push(user.firstname + ' ' + user.lastname);
+        }
     });
+    return userNames.join(', ');
   }
 
   globalToggle() {
@@ -136,6 +140,6 @@ export interface Association {
   id: number;
   name: string;
   usersId: string[];
-  usersName: string[];
+  usersName: string;
   password: string;
 }
