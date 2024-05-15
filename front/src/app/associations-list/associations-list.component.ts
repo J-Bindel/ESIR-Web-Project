@@ -96,7 +96,7 @@ export class AssociationsListComponent implements AfterViewInit{
     return this.selectedRows.selected.length;
   }
 
-  async openPasswordPrompt(selectedUser: Association): Promise<void> {
+  async openPasswordPrompt(selectAssociation: Association): Promise<void> {
     if (this.getSelectedAssociationsCount() !== 1) {
       this.editErrorMessage = 'Select exactly one association when editing';
       return;
@@ -105,9 +105,9 @@ export class AssociationsListComponent implements AfterViewInit{
     dialogRef.afterClosed().subscribe(async password => {
       if (password) {
         try {
-          const isPasswordCorrect = await this.verifyPassword(selectedUser, password);
+          const isPasswordCorrect = await this.verifyPassword(selectAssociation, password);
         if (isPasswordCorrect) {
-          this.openAssociationEditPopup(selectedUser, password);
+          this.openAssociationEditPopup(selectAssociation, password);
         } else {
           this.showSnackBar('Incorrect password. Please try again.');
         }
@@ -118,9 +118,9 @@ export class AssociationsListComponent implements AfterViewInit{
   });
   }
 
-  openAssociationEditPopup(selectedUser: Association, password: string): void {
+  openAssociationEditPopup(selectAssociation: Association, password: string): void {
     const dialogRef = this.dialog.open(AssociationEditPopupComponent, {
-      data: { user: selectedUser, password: password }
+      data: { user: selectAssociation, password: password }
     });
 
     dialogRef.afterClosed().subscribe(result => {
