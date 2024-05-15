@@ -8,10 +8,10 @@ import { AssociationsService } from './associations.service';
 export class AssociationInput {
     @ApiProperty({
         description: 'The IDs of the users being part of the association',
-        example: [1,2,3],
-        type: Array<Number>,
+        example: "1,2,3",
+        type: String,
     })
-    public idUsers: number[];
+    public userIds: string;
     @ApiProperty({
         description: 'The name of the association',
         example: "BDE ESIR",
@@ -47,17 +47,7 @@ export class AssociationsController {
         description: 'The association to get',
         type: AssociationInput,
     })
-    @ApiParam({
-        name: 'identifier', required: true, description: 'an integer of an association id',
-        allowEmptyValue: false,
-        examples: {
-            a: {
-                summary: "Warner Compagny",
-                description: "Get the association corresponding to the id 1",
-                value: "1"
-            },
-        }
-    })
+    @ApiParam({ name: 'id', description: 'Association ID', type: 'integer' })
     @Get(':id')
     public async getAssoById(@Param() parameter): Promise <Association> {
         const id: number = parameter.id;
@@ -81,13 +71,13 @@ export class AssociationsController {
             a: {
                 summary: "21st century Fox",
                 description: "Association example",
-                value: {idUsers:[1,2,3,4], name: "21st century Fox", password: "valid_password"} as AssociationInput
+                value: {userIds:"1,2,3,4", name: "21st century Fox", password: "valid_password"} as AssociationInput
             }
         }
     })
     @Post()
     public async create(@Body() input: AssociationInput): Promise <Association> {
-        return await this.service.create(input.idUsers, input.name, input.password);
+        return await this.service.create(input.userIds, input.name, input.password);
     }
     
     @UseGuards(AuthGuard('jwt'))
@@ -98,7 +88,7 @@ export class AssociationsController {
             a: {
                 summary: "Warner Compagny",
                 description: "Association example",
-                value: {idUsers: [1,2,3,4], name: "Universal", password: "valid_password"} as AssociationInput
+                value: {userIds: "1,2,3,4", name: "Universal", password: "valid_password"} as AssociationInput
             }
         }
     })
@@ -107,17 +97,7 @@ export class AssociationsController {
         description: 'The association to set',
         type: AssociationInput,
     })
-    @ApiParam({
-        name: 'identifier', required: true, description: 'an integer of an association id',
-        allowEmptyValue: false,
-        examples: {
-            a: {
-                summary: "Warner Compagny",
-                description: "Set the association corresponding to the id 1",
-                value: "1"
-            },
-        }
-    })
+    @ApiParam({ name: 'id', description: 'Association ID', type: 'integer' })
     @Put(':id')
     public async setAsso(@Param() parameter, @Body() input: any): Promise <Association> {
         const id: number = parameter.id;
@@ -126,37 +106,16 @@ export class AssociationsController {
             throw new HttpException(`Could not find a valid association with id : ${id}`, HttpStatus.NOT_FOUND);
         }
         
-        return await this.service.setAsso(id, input.idUsers, input.name, input.password);
+        return await this.service.setAsso(id, input.userIds, input.name, input.password);
 
         }    
 
     @UseGuards(AuthGuard('jwt'))
-    @ApiBody({
-        type: AssociationInput,
-        description: "An with an array of Users, a name and a password",
-        examples: {
-            a: {
-                summary: "Warner Compagny",
-                description: "Association example",
-                value: {idUsers: [1,2,3,4], name: "Universal", password: "valid_password"} as AssociationInput
-            }
-        }
-    })
+    @ApiParam({ name: 'id', description: 'Association ID', type: 'integer' })
     @ApiResponse({
         status: 200,
         description: 'The association to delete',
         type: AssociationInput,
-    })
-    @ApiParam({
-        name: 'identifier', required: true, description: 'an integer of an association id',
-        allowEmptyValue: false,
-        examples: {
-            a: {
-                summary: "Warner Compagny",
-                description: "Delete the association corresponding to the id 1",
-                value: "1"
-            },
-        }
     })
     @Delete(':id') 
     public async deleteAsso(@Param() parameter): Promise <boolean> {
@@ -167,28 +126,6 @@ export class AssociationsController {
         }
         
         return this.service.deleteAsso(id);
-    }
-
-    @ApiResponse({
-        status: 200,
-        description: 'The users from the assocation',
-        type: AssociationInput,
-    })
-    @ApiParam({
-        name: 'identifier', required: true, description: 'an integer of an association',
-        allowEmptyValue: false,
-        examples: {
-            a: {
-                summary: "Warner Compagny",
-                description: "Get users corresponding to the id 1 of the association",
-                value: "1"
-            },
-        }
-    })
-    @Get(':id/members')
-    public async getMembers(@Param() parameter): Promise <User[]> {
-        const id: number = parameter.id;
-        return await this.service.getMembers(id);
     }
     
 }
