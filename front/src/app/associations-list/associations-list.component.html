@@ -1,7 +1,8 @@
 <div class="browsing-actions-container">
     <button mat-stroked-button color="accent" class="mat-button">Create an association</button>
-    <button mat-stroked-button color="accent" class="mat-button">Edit an association</button>
+    <button mat-stroked-button color="accent" class="mat-button" (click)="openPasswordPrompt(selectedRows.selected[0])">Edit an association</button>
     <button mat-stroked-button color="accent" class="mat-button">Delete an association</button>
+    <div class="error-message" *ngIf="editErrorMessage">{{ editErrorMessage }}</div>
 </div>
 
 <div class="table-paginator-container">
