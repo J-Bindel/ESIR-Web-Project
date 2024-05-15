@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, map } from 'rxjs';
 import { User } from './users-list/users-list.component';
 
 @Injectable({
@@ -14,5 +14,20 @@ export class UserService {
   setUsers(users: User[]) {
     this.usersSubject.next(users);
   }
-
+  
+  getUserNamesByIds(userIds: string[]): Observable<{ [key: string]: string }> {
+    return this.users$.pipe(
+      map(users => {
+        const userNamesMap: { [key: string]: string } = {};
+        userIds.forEach(id => {
+          const user = users.find(u => u.id === +id);
+          if (user) {
+            userNamesMap[id] = user.firstname + ' ' + user.lastname;
+          }
+        });
+        return userNamesMap;
+      })
+    );
+  }
+  
 }
