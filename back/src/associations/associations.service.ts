@@ -28,10 +28,10 @@ export class AssociationsService {
         return await this.assoRepository.findOne({where: {id: Equal(id)}});
      }
      
-    public async create(userIds: string, name: string, password: string): Promise <Association> {
+    public async create(usersId: string, name: string, password: string): Promise <Association> {
         const saltOrRounds = 10;
         const hash = await bcrypt.hash(password, saltOrRounds);
-        const arrayUserIds = userIds.split(',');
+        const arrayUserIds = usersId.split(',');
         arrayUserIds.forEach(async (id) => {
             const user: User = await this.userRepository.findOne({where: {id: Equal(+id)}});
             if (user === undefined) {
@@ -42,7 +42,7 @@ export class AssociationsService {
             return undefined;
         }
         const newAssociation: Association = await this.assoRepository.create({
-            userIds: userIds, 
+            usersId: usersId, 
             name: name,
             password: hash
         });
@@ -50,8 +50,8 @@ export class AssociationsService {
         return newAssociation;
      }
      
-    public async setAsso(id: number, userIds: string, name: string, password: string): Promise <Association> {
-        const arrayUserIds = userIds.split(',');
+    public async setAsso(id: number, usersId: string, name: string, password: string): Promise <Association> {
+        const arrayUserIds = usersId.split(',');
         arrayUserIds.forEach(async (id) => {
             const user: User = await this.userRepository.findOne({where: {id: Equal(+id)}});
             if (user === undefined) {
@@ -67,7 +67,7 @@ export class AssociationsService {
         if (asso === undefined) {
             return undefined;
         }
-        asso.userIds = userIds;
+        asso.usersId = usersId;
         asso.name = name;
         asso.password = hash;
         await this.assoRepository.save(asso);

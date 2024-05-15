@@ -5,7 +5,7 @@ export class Association {
     @PrimaryGeneratedColumn()
     public id : number;
     @Column()
-    public userIds : string;
+    public usersId : string;
     @Column()
     public name : string;
     @Column()
