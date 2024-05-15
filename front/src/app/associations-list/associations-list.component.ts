@@ -1,5 +1,6 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ApiHelperService } from '../services/api-helper.service';
@@ -41,30 +42,40 @@ export class AssociationsListComponent implements AfterViewInit{
   fetchAssociationsData() {
     this.api.get({ endpoint: '/associations' })
     .then((data) => {
-      this.dataSource.data = data.map((association: { id: number; name: string; usersID: number[]; usersName: string[]; password: string; }) => {
+      const associationDataPromises = data.map(async (association: { id: number; name: string; userIds: string; password: string; }) => {
+        const usersName = await this.replaceUserIdsWithNames(association.userIds);
         return {
           id: association.id,
           name: association.name,
-          usersID: association.usersID,
-          usersName: this.replaceUserIdsWithNames(association.usersID),
+          usersId: association.userIds,
+          usersName: usersName,
           password: association.password
-        }
+        };
+      });
+
+      Promise.all(associationDataPromises)
+      .then(associations => {
+        this.dataSource.data = associations;
       })
+      .catch(error => {
+        console.error('Error fetching association data', error);
+      });
     })
     .catch((error) => {
-      console.error(error);
-    });
+      console.error('Error fetching associations', error);
+    })
   }
 
-  replaceUserIdsWithNames(ids: number[]): string {
-    const userNames: string[] = [];
-    ids.forEach((id) => {
-        const user = this.users.find((user) => user.id === id);
-        if (user) {
-            userNames.push(user.firstname + ' ' + user.lastname);
-        }
+  replaceUserIdsWithNames(userIds: string): Promise<string> {
+    const userIdArray = userIds.split(',');
+    return firstValueFrom(this.userService.getUserNamesByIds(userIdArray))
+    .then(userNamesMap => {
+      return userIdArray.map(id => userNamesMap[id] || id).join(', ');
+    })
+    .catch(error => {
+      console.error('Error fetching user names', error);
+      return userIds;
     });
-    return userNames.join(', ');
   }
 
   globalToggle() {
@@ -139,7 +150,7 @@ export class AssociationsListComponent implements AfterViewInit{
 export interface Association {
   id: number;
   name: string;
-  usersId: string[];
+  usersId: string;
   usersName: string;
   password: string;
 }
