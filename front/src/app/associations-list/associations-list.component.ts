@@ -17,7 +17,7 @@ import { UserService } from '../user.service';
   styleUrls: ['./associations-list.component.css']
 })
 export class AssociationsListComponent implements AfterViewInit{
-  displayedColumns: string[] = ['id', 'name', 'users'];
+  displayedColumns: string[] = ['select', 'id', 'name', 'users'];
   dataSource = new MatTableDataSource<Association>();
   users: User[] = [];
   selectedRows: SelectionModel<Association> = new SelectionModel<Association>(true, []);
