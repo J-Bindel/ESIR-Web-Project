@@ -1,5 +1,6 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { forkJoin } from 'rxjs';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
@@ -122,6 +123,30 @@ import { UserCreatePopupComponent } from '../user-create-popup/user-create-popup
       });
     }
 
+    deleteUsers(selectedUsers: User[]) {
+      if (this.getSelectedUsersCount() <= 0) {
+        this.editErrorMessage = 'Select at least one user when deleting';
+        return;
+      }
+      
+      // Extract the IDs from the selected users
+      const ids = selectedUsers.map(user => user.id);
+      
+      // Create an array of observable requests
+      const requests = ids.map(id => this.api.delete({ endpoint: `/users/${id}`}));
+      forkJoin(requests).subscribe({
+        next: results => {
+          console.log('All users deleted successfully', results);
+        },
+        error: error => {
+          console.error('Error deleting users', error);
+        },
+        complete: () => {
+          console.log('All delete requests completed');
+          window.location.reload();
+        }
+      });
+    }
 }
 
 export interface User {
