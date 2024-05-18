@@ -28,10 +28,10 @@ export class AssociationsService {
         return await this.assoRepository.findOne({where: {id: Equal(id)}});
      }
      
-    public async create(usersId: string, name: string, password: string): Promise <Association> {
+    public async create(userIds: string, name: string, password: string): Promise <Association> {
         const saltOrRounds = 10;
         const hash = await bcrypt.hash(password, saltOrRounds);
-        const arrayUserIds = usersId.split(',');
+        const arrayUserIds = userIds.split(',');
         arrayUserIds.forEach(async (id) => {
             const user: User = await this.userRepository.findOne({where: {id: Equal(+id)}});
             if (user === undefined) {
@@ -42,7 +42,7 @@ export class AssociationsService {
             return undefined;
         }
         const newAssociation: Association = await this.assoRepository.create({
-            usersId: usersId, 
+            userIds: userIds, 
             name: name,
             password: hash
         });
@@ -50,8 +50,8 @@ export class AssociationsService {
         return newAssociation;
      }
      
-    public async setAsso(id: number, usersId: string, name: string, password: string): Promise <Association> {
-        const arrayUserIds = usersId.split(',');
+    public async setAsso(id: number, userIds: string, name: string, password: string): Promise <Association> {
+        const arrayUserIds = userIds.split(',');
         arrayUserIds.forEach(async (id) => {
             const user: User = await this.userRepository.findOne({where: {id: Equal(+id)}});
             if (user === undefined) {
@@ -67,7 +67,7 @@ export class AssociationsService {
         if (asso === undefined) {
             return undefined;
         }
-        asso.usersId = usersId;
+        asso.userIds = userIds;
         asso.name = name;
         asso.password = hash;
         await this.assoRepository.save(asso);
@@ -88,4 +88,18 @@ export class AssociationsService {
         }
      }
 
+     public async removeUsersDeleted(id: number): Promise<void> {
+        const associations = await this.assoRepository.find();
+        const userIdsStr = id.toString();
+
+        for (const asso of associations) {
+            const userIds = asso.userIds.split(',').map(id => id.trim());
+            const updatedUsersId = userIds.filter(id => id !== userIdsStr);
+
+            if (updatedUsersId.length !== userIds.length) {
+                asso.userIds = updatedUsersId.join(',');
+                await this.assoRepository.save(asso);
+            }
+        }
+    }
 }
