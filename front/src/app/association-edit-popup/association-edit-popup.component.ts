@@ -21,10 +21,13 @@ export class AssociationEditPopupComponent implements OnInit{
   // Define form controls for each input field
   name = new FormControl('', [Validators.required]);
   password = new FormControl('', [Validators.required]);
+  confirmPassword = new FormControl('', [Validators.required]);
   
   errorMessage: {[key: string]: any}  = { 
     name: '',
     users: '',
+    password: '',
+    confirmPassword: '',
   };
 
   constructor(
@@ -39,6 +42,7 @@ export class AssociationEditPopupComponent implements OnInit{
     this.password.setValue(this.data.password);
     this.name.valueChanges.subscribe(() => this.updateErrorMessage('name'));
     this.password.valueChanges.subscribe(() => this.updateErrorMessage('password'));
+    this.confirmPassword.valueChanges.subscribe(() => this.updateErrorMessage('confirmPassword'));
 
   }
 
@@ -90,8 +94,14 @@ export class AssociationEditPopupComponent implements OnInit{
   updateErrorMessage(fieldName: string) {
     const control = this[fieldName];
     this.errorMessage[fieldName] = '';
-    if (control.hasError('required')) {
-      this.errorMessage[fieldName] = 'This field is required';
+    if (control.invalid && control.dirty) {      
+      if (control.hasError('required')) {
+        this.errorMessage[fieldName] = 'This field is required';
+      } else if (control.hasError('passwordMismatch')) {
+        this.errorMessage[fieldName] = 'Passwords do not match';
+      }
+    } else {
+      this.errorMessage[fieldName] = '';
     }
   }
 
