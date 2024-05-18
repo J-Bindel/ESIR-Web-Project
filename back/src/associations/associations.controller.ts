@@ -11,7 +11,7 @@ export class AssociationInput {
         example: "1,2,3",
         type: String,
     })
-    public usersId: string;
+    public userIds: string;
     @ApiProperty({
         description: 'The name of the association',
         example: "BDE ESIR",
@@ -71,13 +71,13 @@ export class AssociationsController {
             a: {
                 summary: "21st century Fox",
                 description: "Association example",
-                value: {usersId:"1,2,3,4", name: "21st century Fox", password: "valid_password"} as AssociationInput
+                value: {userIds:"1,2,3,4", name: "21st century Fox", password: "valid_password"} as AssociationInput
             }
         }
     })
     @Post()
     public async create(@Body() input: AssociationInput): Promise <Association> {
-        return await this.service.create(input.usersId, input.name, input.password);
+        return await this.service.create(input.userIds, input.name, input.password);
     }
     
     @UseGuards(AuthGuard('jwt'))
@@ -88,7 +88,7 @@ export class AssociationsController {
             a: {
                 summary: "Warner Compagny",
                 description: "Association example",
-                value: {usersId: "1,2,3,4", name: "Universal", password: "valid_password"} as AssociationInput
+                value: {userIds: "1,2,3,4", name: "Universal", password: "valid_password"} as AssociationInput
             }
         }
     })
@@ -106,7 +106,7 @@ export class AssociationsController {
             throw new HttpException(`Could not find a valid association with id : ${id}`, HttpStatus.NOT_FOUND);
         }
         
-        return await this.service.setAsso(id, input.usersId, input.name, input.password);
+        return await this.service.setAsso(id, input.userIds, input.name, input.password);
 
         }    
 
