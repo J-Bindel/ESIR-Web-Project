@@ -27,6 +27,7 @@ import { PasswordPromptComponent } from './password-prompt/password-prompt.compo
 import { AssociationsListComponent } from './associations-list/associations-list.component';
 import { AssociationEditPopupComponent } from './association-edit-popup/association-edit-popup.component';
 import { MatSelectModule } from '@angular/material/select';
+import { UserCreatePopupComponent } from './user-create-popup/user-create-popup.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -36,7 +37,8 @@ import { MatSelectModule } from '@angular/material/select';
     UserEditPopupComponent,
     PasswordPromptComponent,
     AssociationsListComponent,
-    AssociationEditPopupComponent
+    AssociationEditPopupComponent,
+    UserCreatePopupComponent
   ],
   imports: [
     BrowserModule,

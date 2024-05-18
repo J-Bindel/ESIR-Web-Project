@@ -1,5 +1,5 @@
 <div class="browsing-actions-container">
-  <button mat-stroked-button color="accent" class="mat-button">Create a user</button>
+  <button (click)="openUserCreatePopup()" mat-stroked-button color="accent" class="mat-button">Create a user</button>
   <button (click)="openPasswordPrompt(selectedRows.selected[0])" mat-stroked-button color="accent" class="mat-button">Edit a user</button>
   <button mat-stroked-button color="accent" class="mat-button">Delete a user</button>
   <div class="error-message" *ngIf="editErrorMessage">{{ editErrorMessage }}</div>

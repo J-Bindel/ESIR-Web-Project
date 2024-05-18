@@ -8,6 +8,7 @@ import { UserEditPopupComponent } from '../user-edit-popup/user-edit-popup.compo
 import { ApiHelperService } from '../services/api-helper.service';
 import { PasswordPromptComponent } from '../password-prompt/password-prompt.component';
 import { UserService } from '../user.service';
+import { UserCreatePopupComponent } from '../user-create-popup/user-create-popup.component';
   
   @Component({
     selector: 'app-users-list',
@@ -62,6 +63,25 @@ import { UserService } from '../user.service';
       return this.selectedRows.selected.length;
     }
 
+    openUserEditPopup(selectedUser: User, password: string): void {
+      const dialogRef = this.dialog.open(UserEditPopupComponent, {
+        data: { user: selectedUser, password: password }
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        console.log('The dialog was closed');
+      });
+    }
+
+    openUserCreatePopup(): void {
+      const dialogRef = this.dialog.open(UserCreatePopupComponent);
+
+      dialogRef.afterClosed().subscribe(result => {
+        console.log('The dialog was closed');
+      });
+
+    }
+
     async openPasswordPrompt(selectedUser: User): Promise<void> {
       if (this.getSelectedUsersCount() !== 1) {
         this.editErrorMessage = 'Select exactly one user when editing';
@@ -82,16 +102,6 @@ import { UserService } from '../user.service';
         }
       }
     });
-    }
-
-    openUserEditPopup(selectedUser: User, password: string): void {
-      const dialogRef = this.dialog.open(UserEditPopupComponent, {
-        data: { user: selectedUser, password: password }
-      });
-
-      dialogRef.afterClosed().subscribe(result => {
-        console.log('The dialog was closed');
-      });
     }
 
     async verifyPassword(selectedUser: User, password: string): Promise<boolean> {
