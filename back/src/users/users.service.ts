@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { User } from './user.entity';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { UserDeletedEvent } from './user.events';
 import { Equal, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
@@ -9,7 +11,8 @@ export class UsersService {
     
     constructor(
         @InjectRepository(User)
-        private repository: Repository<User>
+        private repository: Repository<User>,
+        private readonly eventEmitter: EventEmitter2,
     ) { }
 
     public getAllUsers(): Promise <User[]> {
@@ -57,6 +60,7 @@ export class UsersService {
     public async deleteUser(id: number) : Promise <boolean>{
         const user: User = await this.getUserById(id);
         await this.repository.delete(user);
+        this.eventEmitter.emit('user.deleted', new UserDeletedEvent(id));
         return true;
      }
 }
