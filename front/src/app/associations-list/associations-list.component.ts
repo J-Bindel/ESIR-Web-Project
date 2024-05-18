@@ -10,6 +10,7 @@ import { AssociationEditPopupComponent } from '../association-edit-popup/associa
 import { PasswordPromptComponent } from '../password-prompt/password-prompt.component';
 import { User } from '../users-list/users-list.component';
 import { UserService } from '../user.service';
+import { AssociationCreatePopupComponent } from '../association-create-popup/association-create-popup.component';
 
 @Component({
   selector: 'app-associations-list',
@@ -96,6 +97,24 @@ export class AssociationsListComponent implements AfterViewInit{
     return this.selectedRows.selected.length;
   }
 
+  openAssociationCreatePopup(): void {
+    const dialogRef = this.dialog.open(AssociationCreatePopupComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+  }
+  
+  openAssociationEditPopup(selectAssociation: Association, password: string): void {
+    const dialogRef = this.dialog.open(AssociationEditPopupComponent, {
+      data: { user: selectAssociation, password: password }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+  }
+  
   async openPasswordPrompt(selectAssociation: Association): Promise<void> {
     if (this.getSelectedAssociationsCount() !== 1) {
       this.editErrorMessage = 'Select exactly one association when editing';
@@ -116,16 +135,6 @@ export class AssociationsListComponent implements AfterViewInit{
       }
     }
   });
-  }
-
-  openAssociationEditPopup(selectAssociation: Association, password: string): void {
-    const dialogRef = this.dialog.open(AssociationEditPopupComponent, {
-      data: { user: selectAssociation, password: password }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-    });
   }
 
   async verifyPassword(selectedAssociation: Association, password: string): Promise<boolean> {

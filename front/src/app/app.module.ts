@@ -28,6 +28,7 @@ import { AssociationsListComponent } from './associations-list/associations-list
 import { AssociationEditPopupComponent } from './association-edit-popup/association-edit-popup.component';
 import { MatSelectModule } from '@angular/material/select';
 import { UserCreatePopupComponent } from './user-create-popup/user-create-popup.component';
+import { AssociationCreatePopupComponent } from './association-create-popup/association-create-popup.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -38,7 +39,8 @@ import { UserCreatePopupComponent } from './user-create-popup/user-create-popup.
     PasswordPromptComponent,
     AssociationsListComponent,
     AssociationEditPopupComponent,
-    UserCreatePopupComponent
+    UserCreatePopupComponent,
+    AssociationCreatePopupComponent
   ],
   imports: [
     BrowserModule,
