@@ -71,7 +71,7 @@ export class AssociationEditPopupComponent implements OnInit{
     
     const associationData = {
       name: this.name.value,
-      usersId: usersToAdd.map(user => user.userId),
+      userIds: usersToAdd.map(user => user.userId),
       usersName: userNamesToAdd,
       password: this.password.value
     };

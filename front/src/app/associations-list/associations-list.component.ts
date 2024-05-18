@@ -47,7 +47,7 @@ export class AssociationsListComponent implements AfterViewInit{
         return {
           id: association.id,
           name: association.name,
-          usersId: association.userIds,
+          userIds: association.userIds,
           usersName: usersName,
           password: association.password
         };
@@ -150,7 +150,7 @@ export class AssociationsListComponent implements AfterViewInit{
 export interface Association {
   id: number;
   name: string;
-  usersId: string;
+  userIds: string;
   usersName: string;
   password: string;
 }
