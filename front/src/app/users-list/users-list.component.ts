@@ -10,6 +10,7 @@ import { ApiHelperService } from '../services/api-helper.service';
 import { PasswordPromptComponent } from '../password-prompt/password-prompt.component';
 import { UserService } from '../user.service';
 import { UserCreatePopupComponent } from '../user-create-popup/user-create-popup.component';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
   
   @Component({
     selector: 'app-users-list',
@@ -123,6 +124,23 @@ import { UserCreatePopupComponent } from '../user-create-popup/user-create-popup
       });
     }
 
+    openConfirmDialog(selectedUsers: User[]): void {
+      const ids = selectedUsers.map(user => user.id);
+      const message = selectedUsers.length === 1
+      ? `Are you sure you want to delete user ${selectedUsers[0].firstname} ${selectedUsers[0].lastname} (ID: ${selectedUsers[0].id})?`
+      : `Are you sure you want to delete these ${selectedUsers.length} users?`;
+  
+      const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+        data: { message, ids }
+      });
+  
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.deleteUsers(selectedUsers);
+        }
+      });
+    }
+    
     deleteUsers(selectedUsers: User[]) {
       if (this.getSelectedUsersCount() <= 0) {
         this.editErrorMessage = 'Select at least one user when deleting';

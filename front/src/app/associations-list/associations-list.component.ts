@@ -1,6 +1,6 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, forkJoin } from 'rxjs';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ApiHelperService } from '../services/api-helper.service';
@@ -11,6 +11,7 @@ import { PasswordPromptComponent } from '../password-prompt/password-prompt.comp
 import { User } from '../users-list/users-list.component';
 import { UserService } from '../user.service';
 import { AssociationCreatePopupComponent } from '../association-create-popup/association-create-popup.component';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-associations-list',
@@ -153,6 +154,48 @@ export class AssociationsListComponent implements AfterViewInit{
       duration: 3000,
       verticalPosition: 'top',
     });
+  }
+
+  openConfirmDialog(selectedAssociations: Association[]): void {
+    const ids = selectedAssociations.map(association => association.id);
+    const message = selectedAssociations.length === 1
+      ? `Are you sure you want to delete user ${selectedAssociations[0].name} (ID: ${selectedAssociations[0].id})?`
+      : `Are you sure you want to delete these ${selectedAssociations.length} users?`;
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message, ids }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.deleteAssociations(selectedAssociations);
+      }
+    });
+  }
+
+  deleteAssociations(selectedAssociations: Association[]): void {
+    if (this.getSelectedAssociationsCount() <= 0) {
+      this.editErrorMessage = 'Select at least one association when deleting';
+      return;
+    }
+    // Extract the IDs from the selected associations
+    const ids = selectedAssociations.map(association => association.id);
+          
+    // Create an array of observable requests
+    const requests = ids.map(id => this.api.delete({ endpoint: `/associations/${id}`}));
+    forkJoin(requests).subscribe({
+      next: results => {
+        console.log('All users deleted successfully', results);
+      },
+      error: error => {
+        console.error('Error deleting users', error);
+      },
+      complete: () => {
+        console.log('All delete requests completed');
+        window.location.reload();
+      }
+    });
+
   }
 }
 
