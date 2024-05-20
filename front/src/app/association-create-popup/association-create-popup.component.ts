@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { User } from '../users-list/users-list.component';
 import { FormControl, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
@@ -11,6 +11,7 @@ import { ApiHelperService } from '../services/api-helper.service';
   styleUrls: ['./association-create-popup.component.css']
 })
 export class AssociationCreatePopupComponent implements OnInit{
+  @Output() groupCreated = new EventEmitter<void>();
   users: { user: User, addToAssociationControl:  FormControl }[] = [];
 
   // Define index signature
@@ -39,12 +40,7 @@ export class AssociationCreatePopupComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    this.userService.users$.subscribe((users => {
-      users.map(user => ({
-        user,
-        addToGroupControl: new FormControl('')
-      }))
-    }));
+    this.fetchUsers();
   }
 
   close(): void {
@@ -53,33 +49,39 @@ export class AssociationCreatePopupComponent implements OnInit{
 
   onSubmit(): void {
     const usersToAdd = this.users
-    .filter(userAssociation => userAssociation.addToAssociationControl.value === 'Yes')
-    .map(userAssociation => ({
-      userId: userAssociation.user.id,
-      addToAssociation: userAssociation.addToAssociationControl.value
-    }));
-
+      .filter(userAssociation => userAssociation.addToAssociationControl.value === 'Yes')
+      .map(userAssociation => ({
+        userId: userAssociation.user.id,
+        addToAssociation: userAssociation.addToAssociationControl.value
+      }));
+    
     // Retrieve the users' names
-    const userNamesToAdd = usersToAdd.map(({ userId }) => {
-      const user = this.users.find(userGroup => userGroup.user.id === userId);
-      return user ? `${user.user.firstname} ${user.user.lastname}` : '';
-    });
+    const userIds = usersToAdd.map(({ userId }) => userId).join(',');
     
     const associationData = {
       name: this.name.value,
-      userIds: usersToAdd.map(user => user.userId),
-      usersName: userNamesToAdd,
+      userIds: userIds,
       password: this.password.value
     };
 
     this.api.post({ endpoint: '/associations', data: associationData })
     .then(() => {
       console.log('Association created successfully');
+      this.groupCreated.emit();
       this.dialogRef.close();
-      window.location.reload();
     })
     .catch((error) => {
       console.error(error);
+    });
+
+  }
+
+  private fetchUsers(): void {
+    this.userService.users$.subscribe((users) => {
+      this.users = users.map(user => ({
+        user,
+        addToAssociationControl: new FormControl('')
+      }));
     });
   }
 
