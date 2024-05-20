@@ -135,7 +135,7 @@ export class UsersController {
     })
     @Delete(':id') 
     public async deleteUser(@Param() parameter): Promise <boolean> {
-        const id: number = parameter.id;
+        const id: number = +parameter.id;
         const user_target: User = await this.service.getUserById(id);
         if(user_target === null) {
             throw new HttpException(`Could not find a valid user with id : ${id}`, HttpStatus.NOT_FOUND);

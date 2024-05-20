@@ -119,7 +119,7 @@ export class AssociationsController {
     })
     @Delete(':id') 
     public async deleteAsso(@Param() parameter): Promise <boolean> {
-        const id: number = parameter.id;
+        const id: number = +parameter.id;
         const asso_target: Association = await this.service.getAssoById(id);
         if(asso_target === undefined) {
             throw new HttpException(`Could not find a valid association with id : ${id}`, HttpStatus.NOT_FOUND);
