@@ -1,0 +1,19 @@
+@startuml component_diagram
+skinparam componentStyle rectangle
+
+component "Front End\n(Angular)" as FE {
+  [UI Interface]
+}
+
+component "Back End\n(NestJS)" as BE {
+  [API Interface]
+  [DB Interface]
+}
+
+component "Database\n(MySQL)" as DB {
+  [Data Storage Interface]
+}
+
+FE --> BE : API Interface
+BE --> DB : DB Interface
+@enduml
