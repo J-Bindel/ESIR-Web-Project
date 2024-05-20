@@ -108,7 +108,7 @@ export class AssociationsListComponent implements AfterViewInit{
   
   openAssociationEditPopup(selectAssociation: Association, password: string): void {
     const dialogRef = this.dialog.open(AssociationEditPopupComponent, {
-      data: { user: selectAssociation, password: password }
+      data: { association: selectAssociation, password: password }
     });
 
     dialogRef.afterClosed().subscribe(result => {
