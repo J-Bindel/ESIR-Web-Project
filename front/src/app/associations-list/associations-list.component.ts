@@ -45,12 +45,12 @@ export class AssociationsListComponent implements AfterViewInit{
     this.api.get({ endpoint: '/associations' })
     .then((data) => {
       const associationDataPromises = data.map(async (association: { id: number; name: string; userIds: string; password: string; }) => {
-        const usersName = await this.replaceUserIdsWithNames(association.userIds);
+        const userNames = await this.replaceUserIdsWithNames(association.userIds);
         return {
           id: association.id,
           name: association.name,
           userIds: association.userIds,
-          usersName: usersName,
+          userNames: userNames,
           password: association.password
         };
       });
@@ -101,8 +101,8 @@ export class AssociationsListComponent implements AfterViewInit{
   openAssociationCreatePopup(): void {
     const dialogRef = this.dialog.open(AssociationCreatePopupComponent);
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
+    dialogRef.componentInstance.groupCreated.subscribe(() => {
+      this.fetchAssociationsData();
     });
   }
   
@@ -111,8 +111,18 @@ export class AssociationsListComponent implements AfterViewInit{
       data: { association: selectAssociation, password: password }
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
+    dialogRef.afterClosed().subscribe(updatedAssociation => {
+      if (updatedAssociation) {
+        const index = updatedAssociation.id - 1;
+        // Update the data source with the updated association
+        this.dataSource.data[index].name = updatedAssociation.name;
+        this.dataSource.data[index].userIds = updatedAssociation.userIds;
+        this.replaceUserIdsWithNames(updatedAssociation.userIds).then(userNames => {
+          this.dataSource.data[index].userNames = userNames;
+        }
+        );
+        this.dataSource.data[index].password = updatedAssociation.password;
+      }
     });
   }
   
@@ -203,6 +213,6 @@ export interface Association {
   id: number;
   name: string;
   userIds: string;
-  usersName: string;
+  userNames: string;
   password: string;
 }
