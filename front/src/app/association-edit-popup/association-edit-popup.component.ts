@@ -46,48 +46,48 @@ export class AssociationEditPopupComponent implements OnInit{
 
   }
 
-    ngOnInit(): void {
-      this.userService.users$.subscribe((users) => {
-        this.users = users.map(user => ({
-          user,
-          addToAssociationControl: new FormControl('')
-        }));
-      });
-    }
+  ngOnInit(): void {
+    this.fetchUsers();
+  }
 
   close(): void {
     this.dialogRef.close();
   }
 
-  onSubmit(): void {
-    const usersToAdd = this.users
-    .filter(userAssociation => userAssociation.addToAssociationControl.value === 'Yes')
-    .map(userAssociation => ({
-      userId: userAssociation.user.id,
-      addToAssociation: userAssociation.addToAssociationControl.value
-    }));
+    onSubmit(): void {
+      const usersToAdd = this.users
+        .filter(userAssociation => userAssociation.addToAssociationControl.value === 'Yes')
+        .map(userAssociation => ({
+          userId: userAssociation.user.id,
+          addToAssociation: userAssociation.addToAssociationControl.value
+        }));
     
-    // Retrieve the users' names
-    const userNamesToAdd = usersToAdd.map(({ userId }) => {
-      const user = this.users.find(userGroup => userGroup.user.id === userId);
-      return user ? `${user.user.firstname} ${user.user.lastname}` : '';
-    });
+    const userIds = usersToAdd.map(({ userId }) => userId).join(',');
     
     const associationData = {
       name: this.name.value,
-      userIds: usersToAdd.map(user => user.userId),
-      usersName: userNamesToAdd,
+      userIds: userIds,
       password: this.password.value
     };
 
     this.api.put({ endpoint: `/associations/${this.association.id}`, data: associationData})
     .then(() => {
       console.log(`Association ${this.association.id} successfully updated`);
-      this.dialogRef.close();
-      window.location.reload();
+      // Send the updated association id and association data back to the parent component
+      this.dialogRef.close({ id: this.association.id, name: associationData.name, userIds, password: associationData.password });
     })
     .catch((error) => {
       console.error(error);
+    });
+
+  }
+
+  private fetchUsers(): void {
+    this.userService.users$.subscribe((users) => {
+      this.users = users.map(user => ({
+        user,
+        addToAssociationControl: new FormControl('')
+      }));
     });
   }
 
