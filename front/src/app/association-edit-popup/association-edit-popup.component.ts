@@ -47,12 +47,12 @@ export class AssociationEditPopupComponent implements OnInit{
   }
 
     ngOnInit(): void {
-      this.userService.users$.subscribe((users => {
-        users.map(user => ({
+      this.userService.users$.subscribe((users) => {
+        this.users = users.map(user => ({
           user,
-          addToGroupControl: new FormControl('')
-        }))
-      }));
+          addToAssociationControl: new FormControl('')
+        }));
+      });
     }
 
   close(): void {
