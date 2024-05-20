@@ -1,7 +1,7 @@
 <div class="browsing-actions-container">
     <button (click)="openAssociationCreatePopup()" mat-stroked-button color="accent" class="mat-button">Create an association</button>
     <button (click)="openPasswordPrompt(selectedRows.selected[0])" mat-stroked-button color="accent" class="mat-button">Edit an association</button>
-    <button mat-stroked-button color="accent" class="mat-button">Delete an association</button>
+    <button (click)="openConfirmDialog(selectedRows.selected)" mat-stroked-button color="accent" class="mat-button">Delete an association</button>
     <div class="error-message" *ngIf="editErrorMessage">{{ editErrorMessage }}</div>
 </div>
 
