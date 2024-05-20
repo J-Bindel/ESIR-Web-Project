@@ -1,6 +1,10 @@
 <h1 mat-dialog-title>Confirm Deletion</h1>
 <div mat-dialog-content>
   <p>{{ data.message }}</p>
+  <p *ngIf="data.ids.length > 0">The following IDs will be deleted:</p>
+  <ul>
+    <li *ngFor="let id of data.ids">{{ id }}</li>
+  </ul>
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="onCancel()">Cancel</button>
