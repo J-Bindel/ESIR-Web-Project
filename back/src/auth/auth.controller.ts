@@ -86,8 +86,8 @@ export class AuthController {
   })
     @Post('association/login')
     async associationLogin(@Request() request) {
-      const {id, password} = request.association;
-      const isPasswordGood = this.authService.validateAssociation(request.association.id, request.association.password);
+      const {id, password} = request.body;
+      const isPasswordGood = this.authService.validateAssociation(id, password);
       return { isPasswordGood };
     }
 }
