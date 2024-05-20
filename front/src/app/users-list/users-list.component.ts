@@ -108,7 +108,7 @@ import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.compone
 
     async verifyPassword(selectedUser: User, password: string): Promise<boolean> {
       try {
-        const response = await this.api.post({ endpoint: '/auth/login', data: { username: selectedUser.email, password: password } });
+        const response = await this.api.post({ endpoint: '/auth/user/login', data: { username: selectedUser.email, password: password } });
         return true;
       } catch (error) {
         console.log(error);
