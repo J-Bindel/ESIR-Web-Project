@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ApiHelperService } from '../services/api-helper.service';
 import { TokenStorageService } from '../services/token-storage.service';
+import { UserService } from '../user.service';
 
 @Component({
   selector: 'app-login',
@@ -12,6 +13,7 @@ export class LoginComponent {
   constructor(
 
     private api: ApiHelperService,
+    private userService: UserService,
     private tokenStorageService: TokenStorageService,
   ) {
    }
@@ -39,6 +41,7 @@ export class LoginComponent {
     this.api.post({ endpoint: '/auth/user/login', data: { username: this.email, password: this.password } })
       .then(response => {
         this.tokenStorageService.save(response.access_token);
+        this.userService.setLoggedInUser(response.user);
         window.location.href = '/users'; 
      }).catch(error => {
       console.log(error);
