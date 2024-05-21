@@ -4,11 +4,13 @@ import { LoginComponent } from './login/login.component';
 import { UsersListComponent } from './users-list/users-list.component';
 import { AuthGuard } from './guards/auth.guard';
 import { AssociationsListComponent } from './associations-list/associations-list.component';
+import { ProfileComponent } from './profile/profile.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent}, 
   { path: 'users', component: UsersListComponent, canActivate: [AuthGuard]},
   { path: 'associations', component: AssociationsListComponent, canActivate: [AuthGuard]},
+  { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard]},
   { path: '', redirectTo: '/login', pathMatch: 'full'}
 ];
 
