@@ -22,7 +22,6 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { LoginComponent } from './login/login.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TokenHttpInterceptor } from './interceptors/token.interceptor';
-import { NavComponent } from './nav/nav.component';
 import { UserEditPopupComponent } from './user-edit-popup/user-edit-popup.component';
 import { PasswordPromptComponent } from './password-prompt/password-prompt.component';
 import { AssociationsListComponent } from './associations-list/associations-list.component';
@@ -37,7 +36,6 @@ import { ProfileComponent } from './profile/profile.component';
     AppComponent,
     UsersListComponent,
     LoginComponent,
-    NavComponent,
     UserEditPopupComponent,
     PasswordPromptComponent,
     AssociationsListComponent,
