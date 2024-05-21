@@ -29,7 +29,7 @@
             <span *ngIf="!isCollapsed">Profile</span>
           </span>
         </a>
-        <a mat-list-item>
+        <a mat-list-item (click)="logout()">
           <span class="entry">
             <mat-icon>key</mat-icon>
             <span *ngIf="!isCollapsed">Log out</span>

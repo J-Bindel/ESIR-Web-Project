@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { Router } from '@angular/router';
+import { TokenStorageService } from './services/token-storage.service';
 
 @Component({
   selector: 'app-root',
@@ -15,11 +16,18 @@ export class AppComponent {
   isCollapsed = true;
 
   constructor(
-    public router: Router
+    public router: Router,
+    private tokenStorageService: TokenStorageService,
   ) { }
 
   toggleMenu() {
     this.sidenav.open();
     this.isCollapsed = !this.isCollapsed;
   }
+
+  logout() {
+    this.tokenStorageService.clear();
+    this.router.navigate(['/login']);
+  }
+  
 }
