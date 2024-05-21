@@ -1,13 +1,20 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { ApiHelperService } from '../services/api-helper.service';
+import { User } from '../users-list/users-list.component';
+import { UserService } from '../user.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { PasswordPromptComponent } from '../password-prompt/password-prompt.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
-export class ProfileComponent {
+export class ProfileComponent implements OnInit {
+  user: User | null = null;
+  editErrorMessage = '';
 
   // Define index signature
   [key: string]: any;
@@ -17,6 +24,7 @@ export class ProfileComponent {
   firstname = new FormControl('', [Validators.required]);
   age = new FormControl('', [Validators.required]);
   email = new FormControl('', [Validators.required, Validators.email]);
+  confirmEmail = new FormControl('', [Validators.required, Validators.email]);
   password = new FormControl('', [Validators.required]);
   confirmPassword = new FormControl('', [Validators.required]);
   
@@ -25,34 +33,105 @@ export class ProfileComponent {
     firstname: '',
     age: '',
     email: '',
+    confirmEmail: '',
     password: '',
     confirmPassword: '',
   };
 
   constructor(
+    private userService: UserService,
     private api: ApiHelperService,
-  ) {
+    public dialog: MatDialog,
+    private _snackBar: MatSnackBar,
+  ) { }
+
+  ngOnInit() {
+    this.userService.loggedInUser$.subscribe(user => {
+      this.user = user;
+      if (this.user) {
+        this.lastname.setValue(this.user.lastname);
+        this.firstname.setValue(this.user.firstname);
+        this.age.setValue(this.user.age.toString());
+        this.email.setValue(this.user.email);
+        this.confirmEmail.setValue(this.user.email);
+      }
+    });
+
     this.lastname.valueChanges.subscribe(() => this.updateErrorMessage('lastname'));
     this.firstname.valueChanges.subscribe(() => this.updateErrorMessage('firstname'));
     this.age.valueChanges.subscribe(() => this.updateErrorMessage('age'));
-    this.email.valueChanges.subscribe(() => this.updateErrorMessage('email'));
+    this.email.valueChanges.subscribe(() => {
+      // Reset confirmEmail when email changes
+      this.confirmEmail.setValue('');
+      this.updateErrorMessage('email');
+    });
     this.password.valueChanges.subscribe(() => this.updateErrorMessage('password'));
     this.confirmPassword.valueChanges.subscribe(() => this.updateErrorMessage('confirmPassword'));
   }
 
   onSubmit(): void {
-    const userData = {
-      firstname: this.firstname.value,
-      lastname: this.lastname.value,
-      age: this.age.value,
-      email: this.email.value,
-      password: this.password.value
-    };
-    this.api.post({ endpoint: '/users', data: userData })
-    .then(() => {
-      window.location.reload();
-    }).catch((error: any) => {
-      console.log(error);
+    if (this.user) {
+      const updatedUser: User = {
+        ...this.user,
+        firstname: this.firstname.value || '',
+        lastname: this.lastname.value || '',
+        age: parseInt(this.age.value || '0', 10),
+        email: this.email.value || '',
+        password: this.password.value || ''
+      };
+      this.api.put({ endpoint: `/users/${this.user.id}`, data: updatedUser })
+      .then(() => {
+        this.userService.setLoggedInUser(updatedUser);
+        window.location.reload();
+      }).catch((error: any) => {
+        console.log(error);
+      });
+    }
+  }
+
+  async openPasswordPrompt(group: 'email' | 'password'): Promise<void> {
+    const dialogRef = this.dialog.open(PasswordPromptComponent);
+    dialogRef.afterClosed().subscribe(async (password: any) => {
+      if (password) {
+        try {
+          const isPasswordCorrect = await this.verifyPassword(password);
+          if (isPasswordCorrect) {
+            if (group === 'email') {
+              this.email.enable();
+              this.confirmEmail.enable();
+            } else if (group === 'password') {
+              this.password.enable();
+              this.confirmPassword.enable();
+            }
+          } else {
+            this.showSnackBar('Incorrect password. Please try again.');
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    });
+  }
+
+  async verifyPassword(password: string): Promise<boolean> {
+    if (this.user && this.user.email) {
+      try {
+        const response = await this.api.post({ endpoint: '/auth/user/login', data: { username: this.user.email, password: password } });
+        return true;
+      } catch (error) {
+        console.log(error);
+        return false;
+      }
+    } else {
+      console.log("User is not logged in or email is null.");
+      return false;
+    }
+  }
+
+  showSnackBar(message: string): void {
+    this._snackBar.open(message, 'Close', {
+      duration: 3000,
+      verticalPosition: 'top',
     });
   }
 
