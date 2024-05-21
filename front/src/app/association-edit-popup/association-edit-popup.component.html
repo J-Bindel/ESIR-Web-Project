@@ -2,7 +2,7 @@
   <div>
     <span>Edit an association</span>
   </div>
-  <form (ngSubmit)="onSubmit()">
+  <form (ngSubmit)="onSubmit()" [formGroup]="myForm">
       <mat-form-field>
         <mat-label>Name</mat-label>
           <input matInput placeholder="Name" name="name" [formControl]="name">
@@ -31,6 +31,6 @@
         <mat-error *ngIf="confirmPassword.invalid && confirmPassword.dirty">{{ errorMessage['confirmPassword'] }}</mat-error>
       </mat-form-field>
     
-      <button mat-button type="submit">Submit</button>
+      <button mat-button type="submit" [disabled]="myForm.invalid">Submit</button>
     </form>
 </mat-dialog-content>
