@@ -18,6 +18,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { LoginComponent } from './login/login.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TokenHttpInterceptor } from './interceptors/token.interceptor';
@@ -67,6 +68,7 @@ import { ProfileComponent } from './profile/profile.component';
     MatListModule,
     MatSnackBarModule,
     MatSelectModule,
+    MatExpansionModule,
   ],
   providers: [
     {
