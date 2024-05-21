@@ -8,11 +8,17 @@ import { User } from './users-list/users-list.component';
 export class UserService {
   private usersSubject = new BehaviorSubject<User[]>([]);
   users$ = this.usersSubject.asObservable();
+  private loggedInUserSubject = new BehaviorSubject<User | null>(null);
+  loggedInUser$ = this.loggedInUserSubject.asObservable();
 
   constructor() { }
 
   setUsers(users: User[]) {
     this.usersSubject.next(users);
+  }
+
+  setLoggedInUser(user: User) {
+    this.loggedInUserSubject.next(user);
   }
   
   getUserNamesByIds(userIds: string[]): Observable<{ [key: string]: string }> {
