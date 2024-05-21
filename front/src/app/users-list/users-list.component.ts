@@ -94,13 +94,13 @@ import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.compone
         if (password) {
           try {
             const isPasswordCorrect = await this.verifyPassword(selectedUser, password);
-          if (isPasswordCorrect) {
-            this.openUserEditPopup(selectedUser, password);
-          } else {
-            this.showSnackBar('Incorrect password. Please try again.');
-          }
-        } catch (error) {
-          console.error(error);
+            if (isPasswordCorrect) {
+              this.openUserEditPopup(selectedUser, password);
+            } else {
+              this.showSnackBar('Incorrect password. Please try again.');
+            }
+          } catch (error) {
+            console.error(error);
         }
       }
     });
