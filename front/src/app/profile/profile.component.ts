@@ -14,7 +14,6 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class ProfileComponent implements OnInit {
   user: User | null = null;
-  editErrorMessage = '';
 
   // Define index signature
   [key: string]: any;
@@ -70,6 +69,13 @@ export class ProfileComponent implements OnInit {
   }
 
   onSubmit(): void {
+    // Block form submission if email and confirm email do not match
+    if (this.email.value !== this.confirmEmail.value) {
+      return;
+    }
+    if (this.password.value !== this.confirmPassword.value) {
+      return;
+    }
     if (this.user) {
       const updatedUser: User = {
         ...this.user,

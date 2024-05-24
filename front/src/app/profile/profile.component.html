@@ -1,6 +1,5 @@
 <h2>Profile</h2>
-<div class="error-message" *ngIf="editErrorMessage">{{ editErrorMessage }}</div>
-<form (ngSubmit)="onSubmit()" [formGroup]="myForm">
+<form (ngSubmit)="onSubmit()">
     <!-- Personal Information Group -->
     <mat-expansion-panel>
         <mat-expansion-panel-header [expanded]="true">
@@ -24,7 +23,7 @@
             <mat-error *ngIf="age.invalid && age.dirty">{{ errorMessage['age'] }}</mat-error>
         </mat-form-field>
         <div>
-            <button mat-stroked-button color="accent" type="submit" (click)="onSubmit()">Submit Personal Info</button>
+            <button mat-stroked-button color="accent" type="submit">Submit Personal Info</button>
           </div>
     </mat-expansion-panel>
 
@@ -46,7 +45,7 @@
             <mat-error *ngIf="confirmEmail.invalid && confirmEmail.dirty">{{ errorMessage['confirmEmail'] }}</mat-error>
         </mat-form-field>
         <div>
-            <button mat-stroked-button color="accent" type="submit" (click)="onSubmit()">Submit Email Info</button>
+            <button mat-stroked-button color="accent" type="submit" id="submit-button">Submit Email Info</button>
           </div>
     </mat-expansion-panel>
 
@@ -68,11 +67,7 @@
             <mat-error *ngIf="confirmPassword.invalid && confirmPassword.dirty">{{ errorMessage['confirmPassword'] }}</mat-error>
         </mat-form-field>
         <div>
-            <button mat-stroked-button color="accent" type="submit" (click)="onSubmit()" [disabled]="myForm.invalid">Submit Password Info</button>
-          </div>
+            <button mat-stroked-button color="accent" type="submit" id="submit-button">Submit Password Info</button>
+        </div>
     </mat-expansion-panel>
-
-    <div>
-        <button mat-stroked-button color="accent" class="mat-button">Submit</button>
-    </div>
 </form>
