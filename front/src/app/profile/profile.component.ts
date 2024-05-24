@@ -115,17 +115,24 @@ export class ProfileComponent implements OnInit {
             }
           } else {
             this.showSnackBar('Incorrect password. Please try again.');
+            this.closePanel(group);
           }
         } catch (error) {
           console.error(error);
+          this.closePanel(group);
         }
-      }
-      if (group === 'email') {
-        this.emailPanel.close();
-      } else if (group === 'password') {
-        this.passwordPanel.close();
+      } else {
+        this.closePanel(group);
       }
     });
+  }
+
+  private closePanel(group: 'email' | 'password'): void {
+    if (group === 'email') {
+      this.emailPanel.close();
+    } else if (group === 'password') {
+      this.passwordPanel.close();
+    }
   }
 
   async verifyPassword(password: string): Promise<boolean> {
