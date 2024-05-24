@@ -28,7 +28,7 @@
     </mat-expansion-panel>
 
     <!-- Email Information Group -->
-    <mat-expansion-panel (opened)="openPasswordPrompt('email')">
+    <mat-expansion-panel #emailPanel (opened)="openPasswordPrompt('email')">
         <mat-expansion-panel-header>
             <mat-panel-title>
                 Email Information
@@ -50,7 +50,7 @@
     </mat-expansion-panel>
 
     <!-- Password Information Group -->
-    <mat-expansion-panel (opened)="openPasswordPrompt('password')">
+    <mat-expansion-panel #passwordPanel (opened)="openPasswordPrompt('password')">
         <mat-expansion-panel-header>
             <mat-panel-title>
                 Password Information
