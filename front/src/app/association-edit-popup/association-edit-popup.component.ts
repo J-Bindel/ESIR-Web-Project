@@ -55,6 +55,10 @@ export class AssociationEditPopupComponent implements OnInit{
   }
 
     onSubmit(): void {
+      // Block form submission if password and confirm password do not match
+      if (this.password.value !== this.confirmPassword.value) {
+        return;
+      }
       const usersToAdd = this.users
         .filter(userAssociation => userAssociation.addToAssociationControl.value === 'Yes')
         .map(userAssociation => ({
