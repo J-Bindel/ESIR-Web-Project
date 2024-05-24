@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ApiHelperService } from '../services/api-helper.service';
 import { TokenStorageService } from '../services/token-storage.service';
 import { UserService } from '../user.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -12,6 +13,7 @@ export class LoginComponent {
 
   constructor(
 
+    private router: Router,
     private api: ApiHelperService,
     private userService: UserService,
     private tokenStorageService: TokenStorageService,
@@ -42,7 +44,7 @@ export class LoginComponent {
       .then(response => {
         this.tokenStorageService.save(response.access_token);
         this.userService.setLoggedInUser(response.user);
-        window.location.href = '/users'; 
+        this.router.navigate(['/users']);
      }).catch(error => {
       console.log(error);
       if (error.status === 401) {
