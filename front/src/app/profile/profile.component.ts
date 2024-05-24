@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { ApiHelperService } from '../services/api-helper.service';
 import { User } from '../users-list/users-list.component';
@@ -6,6 +6,7 @@ import { UserService } from '../user.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PasswordPromptComponent } from '../password-prompt/password-prompt.component';
 import { MatDialog } from '@angular/material/dialog';
+import { MatExpansionPanel } from '@angular/material/expansion';
 
 @Component({
   selector: 'app-profile',
@@ -36,6 +37,9 @@ export class ProfileComponent implements OnInit {
     password: '',
     confirmPassword: '',
   };
+
+  @ViewChild('emailPanel') emailPanel: MatExpansionPanel;
+  @ViewChild('passwordPanel') passwordPanel: MatExpansionPanel;
 
   constructor(
     private userService: UserService,
@@ -115,6 +119,11 @@ export class ProfileComponent implements OnInit {
         } catch (error) {
           console.error(error);
         }
+      }
+      if (group === 'email') {
+        this.emailPanel.close();
+      } else if (group === 'password') {
+        this.passwordPanel.close();
       }
     });
   }
