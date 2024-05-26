@@ -5,6 +5,7 @@ import { UsersModule } from '../users/users.module';
 import { Equal, Repository } from 'typeorm';
 import { InjectRepository, TypeOrmModule } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
+import { EmailService } from '../email/email.service';
 
 @Module({
     imports: [TypeOrmModule.forFeature([Association, User]),
@@ -17,7 +18,8 @@ export class AssociationsService {
         @InjectRepository(Association)
         private assoRepository: Repository <Association>,
         @InjectRepository(User)
-        private userRepository: Repository <User>
+        private userRepository: Repository <User>,
+        private emailService: EmailService,
     ) {}
     
     public async getAllAssos(): Promise <Association[]> {
@@ -46,7 +48,7 @@ export class AssociationsService {
             name: name,
             password: hash
         });
-        await this.assoRepository.save(newAssociation);
+        await this.notifyComponent(newAssociation, 'create');
         return newAssociation;
      }
      
@@ -63,15 +65,15 @@ export class AssociationsService {
         }
         const saltOrRounds = 10;
         const hash = await bcrypt.hash(password, saltOrRounds);
-        const asso: Association = await this.assoRepository.findOne({where: {id: Equal(id)}});
-        if (asso === undefined) {
+        const assoToUpdate: Association = await this.assoRepository.findOne({where: {id: Equal(id)}});
+        if (assoToUpdate === undefined) {
             return undefined;
         }
-        asso.userIds = userIds;
-        asso.name = name;
-        asso.password = hash;
-        await this.assoRepository.save(asso);
-        return asso;
+        assoToUpdate.userIds = userIds;
+        assoToUpdate.name = name;
+        assoToUpdate.password = hash;
+        await this.notifyComponent(assoToUpdate, 'update');
+        return assoToUpdate;
     }
       
     public async deleteAsso(id: number): Promise <boolean> {
@@ -79,9 +81,19 @@ export class AssociationsService {
             if (typeof id !== 'number') {
                 console.error('Invalid id type:', id, typeof id);
                 return false;
-              }
+            }
+            const assoToDelete: Association = await this.getAssoById(id);
+            if (!assoToDelete) {
+                console.error('Association not found with id:', id);
+                return false;
+            }
             const result = await this.assoRepository.delete(id);
-            return result.affected > 0;
+            if (result.affected > 0) {
+                await this.notifyComponent(assoToDelete, 'delete');
+                return result.affected > 0;
+            } else {
+                return false;
+            }
         } catch(error) {
             console.error('Error deleting association: ', error);   
             return false;
@@ -100,6 +112,53 @@ export class AssociationsService {
                 asso.userIds = updatedUsersId.join(',');
                 await this.assoRepository.save(asso);
             }
+        }
+    }
+
+    private async sendEmail(association: Association, emailType: string): Promise<void> {
+        let subject: string;
+        let html: string;
+
+        if (emailType === 'create') {
+            subject = `[French association administration service] Welcome to ${association.name}!`;
+            html = `<p>Welcome to ${association.name}!</p>
+                    <p>You have successfully been added to ${association.name} association.
+                    <p>You will now be able to receive emails each time the association will be updated or when a new event will be created.</p>`;
+        } else if (emailType === 'update') {
+            subject = `[French association administration service] ${association.name} has been updated!`;
+            html = `<p>${association.name} has been updated!</p>
+                    <p>If the update was not emitted by one of the association members, please contact us.</p>`;
+        } else if (emailType === 'delete') {
+            subject = `[French association administration service] ${association.name} has been deleted!`;
+            html = `<p>${association.name} has been deleted!</p>
+                    <p>If you or any member of the association did not perform this operation, please contact us.</p>`;
+        }
+
+        // Iterate over the users of the association
+        const userIds = association.userIds.split(',');
+        for (const userId of userIds) {
+            const user = await this.userRepository.findOne({where: {id: Equal(+userId)}});
+            if (user !== undefined) {
+                const message = {
+                    email: user.email,
+                    subject: subject,
+                    html: html,
+                };
+                await this.emailService.sendEmail(message);
+            }
+        }
+    }
+
+    private async notifyComponent(association: Association, notificationType: string): Promise<void> {
+        if (notificationType !== 'delete') {
+            await this.assoRepository.save(association);
+            if (notificationType === 'create') {
+                await this.sendEmail(association, 'create');
+            } else if (notificationType === 'update') {
+                await this.sendEmail(association, 'update');
+            }
+        } else if (notificationType === 'delete') {
+            await this.sendEmail(association, 'delete');
         }
     }
 }

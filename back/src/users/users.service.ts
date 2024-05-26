@@ -5,6 +5,7 @@ import { UserDeletedEvent } from './user.events';
 import { Equal, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
+import { EmailService } from '../email/email.service';
 
 @Injectable()
 export class UsersService {
@@ -12,6 +13,7 @@ export class UsersService {
     constructor(
         @InjectRepository(User)
         private repository: Repository<User>,
+        private emailService: EmailService,
         private readonly eventEmitter: EventEmitter2,
     ) { }
 
@@ -37,7 +39,7 @@ export class UsersService {
             email: email,
             password: hash
          })
-         await this.repository.save(newUser);
+         await this.notifyComponent(newUser, 'create');
          return newUser;
      }
      
@@ -51,7 +53,7 @@ export class UsersService {
             user.age = age;
             user.email = email;
             user.password = hash;
-            await this.repository.save(user);
+            await this.notifyComponent(user, 'update');
             return user;
          }
          return undefined;
@@ -59,8 +61,52 @@ export class UsersService {
       
     public async deleteUser(id: number) : Promise <boolean>{
         const user: User = await this.getUserById(id);
-        await this.repository.delete(user);
-        this.eventEmitter.emit('user.deleted', new UserDeletedEvent(id));
+        await this.notifyComponent(user, 'delete');
         return true;
      }
+
+    private async sendEmail(user: User, emailType: string): Promise<void> {
+        let subject: string;
+        let html: string;
+
+        if (emailType === 'create') {
+            subject = 'Welcome to French association administration service!';
+            html = `<h1>Welcome ${user.firstname} ${user.lastname}!</h1>
+            <p>You have successfully created an account on our service.</p>
+            <p>We wish you a nice experience with our service.</p>`;
+        } else if (emailType === 'update') {
+            subject = '[French association administration service] Your account has been updated';
+            html = `<h1>Hello ${user.firstname} ${user.lastname}!</h1>
+            <p>Your account has been updated.</p>
+            <p>If you did not perform this operation, please contact us.</p>`;
+        } else if (emailType === 'delete') {
+            subject = '[French association administration service] Your account has been deleted';
+            html = `<h1>Goodbye ${user.firstname} ${user.lastname}!</h1>
+            <p>Your account has been deleted.</p>
+            <p>If you did not perform this operation, please contact us.</p>`;
+        }
+
+        const message = {
+            email: user.email,
+            subject: subject,
+            html: html
+        }
+        
+        await this.emailService.sendEmail(message);
+    }
+
+    private async notifyComponent(user: User, notificationType: string): Promise<void> {
+        if (notificationType !== 'delete') {
+            await this.repository.save(user);
+            if (notificationType === 'create') {
+                await this.sendEmail(user, 'create');
+            } else if (notificationType === 'update') {
+                await this.sendEmail(user, 'update');
+            }
+        } else if (notificationType === 'delete') {
+            await this.repository.delete(user);
+            await this.sendEmail(user, 'delete');
+            this.eventEmitter.emit('user.deleted', new UserDeletedEvent(user.id));
+        }
+    }
 }
