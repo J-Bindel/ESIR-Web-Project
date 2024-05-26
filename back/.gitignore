@@ -37,3 +37,5 @@ lerna-debug.log*
 modules_test.sh
 test.sh
 type_orm_test.sh
+
+.env

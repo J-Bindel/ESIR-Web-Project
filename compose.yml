@@ -3,6 +3,12 @@
 
 services:
 
+  maildev:
+    image: maildev/maildev
+    ports:
+      - 1080:80
+      - 1025:25
+
   # DB
   database:
     image: mysql:8
