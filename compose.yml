@@ -6,6 +6,7 @@ services:
   # DB
   database:
     image: mysql:8
+    restart: always
     command: --default-authentication-plugin=caching_sha2_password
     environment:
       - MYSQL_ROOT_PASSWORD=admin
@@ -20,6 +21,10 @@ services:
     build: ./back
     ports:
       - 3000:3000
+    volumes:
+      - ./back:/usr/src/app
+      - /usr/src/app/node_modules
+    command: bash -c 'while !</dev/tcp/database/3306; do sleep 1; done; npm run start:dev'
     depends_on:
       - database
       

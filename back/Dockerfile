@@ -1,20 +1,14 @@
-# Base image
 FROM node:latest
-
-# Create app directory
 WORKDIR /usr/src/app
 
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-COPY package*.json ./
-
 # Install app dependencies
+COPY package*.json ./
 RUN npm install
+RUN npm install -g nodemon
 
-# Bundle app source
+# Copy app source code
 COPY . .
 
-# Creates a "dist" folder with the production build
-RUN npm run build
+EXPOSE 3000
 
-# Start the server using the production build
-CMD [ "node", "dist/main.js" ]
+CMD ["npm", "run", "start:dev"]
