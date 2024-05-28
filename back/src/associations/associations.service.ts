@@ -5,7 +5,7 @@ import { UsersModule } from '../users/users.module';
 import { Equal, Repository } from 'typeorm';
 import { InjectRepository, TypeOrmModule } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
-import { EmailService } from '../email/email.service';
+import { ProducerService } from '../queue/producer.service';
 
 @Module({
     imports: [TypeOrmModule.forFeature([Association, User]),
@@ -19,7 +19,7 @@ export class AssociationsService {
         private assoRepository: Repository <Association>,
         @InjectRepository(User)
         private userRepository: Repository <User>,
-        private emailService: EmailService,
+        private producerService: ProducerService,
     ) {}
     
     public async getAllAssos(): Promise <Association[]> {
@@ -144,7 +144,7 @@ export class AssociationsService {
                     subject: subject,
                     html: html,
                 };
-                await this.emailService.sendEmail(message);
+                await this.producerService.addToEmailQueue(message);
             }
         }
     }

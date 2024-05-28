@@ -5,7 +5,7 @@ import { UserDeletedEvent } from './user.events';
 import { Equal, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
-import { EmailService } from '../email/email.service';
+import { ProducerService } from '../queue/producer.service';
 
 @Injectable()
 export class UsersService {
@@ -13,7 +13,7 @@ export class UsersService {
     constructor(
         @InjectRepository(User)
         private repository: Repository<User>,
-        private emailService: EmailService,
+        private producerService: ProducerService,
         private readonly eventEmitter: EventEmitter2,
     ) { }
 
@@ -92,7 +92,7 @@ export class UsersService {
             html: html
         }
         
-        await this.emailService.sendEmail(message);
+        await this.producerService.addToEmailQueue(message);
     }
 
     private async notifyComponent(user: User, notificationType: string): Promise<void> {
