@@ -4,10 +4,11 @@
 services:
 
   maildev:
-    image: maildev/maildev
+    image: soulteary/maildev
     ports:
-      - 1080:80
-      - 1025:25
+      - 1080:1080
+      - 1025:1025
+      
 
   # DB
   database:
@@ -32,6 +33,14 @@ services:
     command: bash -c 'while !</dev/tcp/database/3306; do sleep 1; done; npm run start:dev'
     depends_on:
       - database
+      - maildev
+    environment:
+      RABBITMQ_URL: amqp://rabbitmq
+
+  rabbitmq:
+    image: 'rabbitmq:latest'
+    ports:
+      - '5672:5672'
       
   # Front
   front:
