@@ -39,11 +39,11 @@ export class UsersService {
             email: email,
             password: hash
          })
-         await this.notifyComponent(newUser, {}, 'create');
+         await this.notifyComponents(newUser, {}, 'user create');
          return newUser;
      }
      
-    public async setUser(id: number, firstname: string, lastname: string, age: number, email: string, password: string): Promise <{ user: User, modifiedFields: { [key: string]: any } }>{
+    public async setUser(id: number, firstname: string, lastname: string, age: number, email: string, password: string): Promise <User>{
         if (
             firstname !== undefined &&
             lastname !== undefined &&
@@ -87,11 +87,10 @@ export class UsersService {
             }
 
             if (Object.keys(modifiedFields).length > 0) {
-                await this.repository.save(user);
-                await this.notifyComponent(user, modifiedFields, 'update');
+                await this.notifyComponents(user, modifiedFields, 'user update');
             }
 
-            return { user, modifiedFields };
+            return user;
         }
 
         return undefined;
@@ -99,60 +98,23 @@ export class UsersService {
       
     public async deleteUser(id: number) : Promise <boolean>{
         const user: User = await this.getUserById(id);
-        await this.notifyComponent(user, {},'delete');
+        await this.notifyComponents(user, {},'user delete');
         return true;
      }
 
-    private async sendEmail(user: User, modifiedFields: { [key: string]: any }, emailType: string): Promise<void> {
-        let subject: string;
-        let html: string;
-    
-        if (emailType === 'create') {
-            subject = 'Welcome to French association administration service!';
-            html = `<h1>Welcome ${user.firstname} ${user.lastname}!</h1>
-            <p>You have successfully created an account on our service.</p>
-            <p>We wish you a nice experience with our service.</p>`;
-        } else if (emailType === 'update') {
-            subject = '[French association administration service] Your account has been updated';
-            html = `<h1>Hello ${user.firstname} ${user.lastname}!</h1>
-            <p>Your account has been updated.</p>`;
-    
-            if (Object.keys(modifiedFields).length > 0) {
-                html += `<p>The following fields were modified:</p><ul>`;
-                for (const [field, value] of Object.entries(modifiedFields)) {
-                    html += `<li>${field.charAt(0).toUpperCase() + field.slice(1)}: ${value}</li>`;
-                }
-                html += `</ul>`;
-            }
-    
-            html += `<p>If you did not perform this operation, please contact us.</p>`;
-        } else if (emailType === 'delete') {
-            subject = '[French association administration service] Your account has been deleted';
-            html = `<h1>Goodbye ${user.firstname} ${user.lastname}!</h1>
-            <p>Your account has been deleted.</p>
-            <p>If you did not perform this operation, please contact us.</p>`;
-        }
-    
-        const message = {
+    private async notifyComponents(user: User, modifiedFields: { [key: string]: any }, notificationType: string): Promise<void> {
+        // Create user, modified fields and notification type
+        const notification = {
             email: user.email,
-            subject: subject,
-            html: html
+            user,
+            modifiedFields,
+            notificationType,
         };
-        
-        await this.producerService.addToEmailQueue(message);
-    }
-
-    private async notifyComponent(user: User, modifiedFields: { [key: string]: any }, notificationType: string): Promise<void> {
-        if (notificationType !== 'delete') {
+        await this.producerService.addToNotificationQueue(notification);
+        if (notificationType !== 'user delete') {
             await this.repository.save(user);
-            if (notificationType === 'create') {
-                await this.sendEmail(user, modifiedFields, 'create');
-            } else if (notificationType === 'update') {
-                await this.sendEmail(user, modifiedFields, 'update');
-            }
-        } else if (notificationType === 'delete') {
+        } else {
             await this.repository.delete(user);
-            await this.sendEmail(user, modifiedFields, 'delete');
             this.eventEmitter.emit('user.deleted', new UserDeletedEvent(user.id));
         }
     }
