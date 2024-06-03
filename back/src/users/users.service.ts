@@ -43,7 +43,7 @@ export class UsersService {
          return newUser;
      }
      
-    public async setUser(id: number, firstname: string, lastname: string, age: number, email: string, password: string): Promise <User>{
+    public async setUser(id: number, firstname: string, lastname: string, age: number, email: string, password: string): Promise <{ user: User, modifiedFields: { [key: string]: any } }>{
         if (
             firstname !== undefined &&
             lastname !== undefined &&
@@ -82,7 +82,7 @@ export class UsersService {
             if (!isPasswordModified) {
                 const saltOrRounds = 10;
                 const hash = await bcrypt.hash(password, saltOrRounds);
-                modifiedFields.password = hash;
+                modifiedFields.password = '******';
                 user.password = hash;
             }
 
@@ -91,7 +91,7 @@ export class UsersService {
                 await this.notifyComponent(user, modifiedFields, 'update');
             }
 
-            return user;
+            return { user, modifiedFields };
         }
 
         return undefined;
