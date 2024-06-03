@@ -52,7 +52,7 @@ export class AssociationsService {
         return newAssociation;
      }
      
-    public async setAsso(id: number, userIds: string, name: string, password: string): Promise <Association> {
+    public async setAsso(id: number, userIds: string, name: string, password: string): Promise <{ association: Association, modifiedFields: { [key: string]: any } }> {
         const arrayUserIds = userIds.split(',');
 
         for (const id of arrayUserIds) {
@@ -66,36 +66,36 @@ export class AssociationsService {
             return undefined;
         }
 
-        const assoToUpdate: Association = await this.assoRepository.findOne({where: {id: Equal(id)}});
-        if (!assoToUpdate) {
+        const association: Association = await this.assoRepository.findOne({where: {id: Equal(id)}});
+        if (!association) {
             return undefined;
         }
 
         const modifiedFields: { [key: string]: any } = {};
 
-        if (assoToUpdate.userIds !== userIds) {
+        if (association.userIds !== userIds) {
             modifiedFields.userIds = userIds;
-            assoToUpdate.userIds = userIds;
+            association.userIds = userIds;
         }
-        if (assoToUpdate.name !== name) {
+        if (association.name !== name) {
             modifiedFields.name = name;
-            assoToUpdate.name = name;
+            association.name = name;
         }
 
-        const isPasswordModified = await bcrypt.compare(password, assoToUpdate.password);
+        const isPasswordModified = await bcrypt.compare(password, association.password);
         if (!isPasswordModified) {
             const saltOrRounds = 10;
             const hash = await bcrypt.hash(password, saltOrRounds);
-            modifiedFields.password = hash;
-            assoToUpdate.password = hash;
+            modifiedFields.password = '******';
+            association.password = hash;
         }
 
         if (Object.keys(modifiedFields).length > 0) {
-            await this.assoRepository.save(assoToUpdate);
-            await this.notifyComponent(assoToUpdate, modifiedFields, 'update');
+            await this.assoRepository.save(association);
+            await this.notifyComponent(association, modifiedFields, 'update');
         }
 
-        return assoToUpdate;
+        return { association, modifiedFields };
     }
       
     public async deleteAsso(id: number): Promise <boolean> {
