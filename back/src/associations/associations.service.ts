@@ -48,31 +48,53 @@ export class AssociationsService {
             name: name,
             password: hash
         });
-        await this.notifyComponent(newAssociation, 'create');
+        await this.notifyComponent(newAssociation, {}, 'create');
         return newAssociation;
      }
      
     public async setAsso(id: number, userIds: string, name: string, password: string): Promise <Association> {
         const arrayUserIds = userIds.split(',');
-        arrayUserIds.forEach(async (id) => {
-            const user: User = await this.userRepository.findOne({where: {id: Equal(+id)}});
-            if (user === undefined) {
+
+        for (const id of arrayUserIds) {
+            const user: User = await this.userRepository.findOne({ where: { id: Equal(+id) } });
+            if (!user) {
                 return undefined;
             }
-        });
+        }
+
         if (name === undefined || password === undefined) {
             return undefined;
         }
-        const saltOrRounds = 10;
-        const hash = await bcrypt.hash(password, saltOrRounds);
+
         const assoToUpdate: Association = await this.assoRepository.findOne({where: {id: Equal(id)}});
-        if (assoToUpdate === undefined) {
+        if (!assoToUpdate) {
             return undefined;
         }
-        assoToUpdate.userIds = userIds;
-        assoToUpdate.name = name;
-        assoToUpdate.password = hash;
-        await this.notifyComponent(assoToUpdate, 'update');
+
+        const modifiedFields: { [key: string]: any } = {};
+
+        if (assoToUpdate.userIds !== userIds) {
+            modifiedFields.userIds = userIds;
+            assoToUpdate.userIds = userIds;
+        }
+        if (assoToUpdate.name !== name) {
+            modifiedFields.name = name;
+            assoToUpdate.name = name;
+        }
+
+        const isPasswordModified = await bcrypt.compare(password, assoToUpdate.password);
+        if (!isPasswordModified) {
+            const saltOrRounds = 10;
+            const hash = await bcrypt.hash(password, saltOrRounds);
+            modifiedFields.password = hash;
+            assoToUpdate.password = hash;
+        }
+
+        if (Object.keys(modifiedFields).length > 0) {
+            await this.assoRepository.save(assoToUpdate);
+            await this.notifyComponent(assoToUpdate, modifiedFields, 'update');
+        }
+
         return assoToUpdate;
     }
       
@@ -89,7 +111,7 @@ export class AssociationsService {
             }
             const result = await this.assoRepository.delete(id);
             if (result.affected > 0) {
-                await this.notifyComponent(assoToDelete, 'delete');
+                await this.notifyComponent(assoToDelete, {}, 'delete');
                 return result.affected > 0;
             } else {
                 return false;
@@ -115,7 +137,7 @@ export class AssociationsService {
         }
     }
 
-    private async sendEmail(association: Association, emailType: string): Promise<void> {
+    private async sendEmail(association: Association, modifiedFields: { [key: string]: any }, emailType: string): Promise<void> {
         let subject: string;
         let html: string;
 
@@ -126,8 +148,18 @@ export class AssociationsService {
                     <p>You will now be able to receive emails each time the association will be updated or when a new event will be created.</p>`;
         } else if (emailType === 'update') {
             subject = `[French association administration service] ${association.name} has been updated!`;
-            html = `<p>${association.name} has been updated!</p>
-                    <p>If the update was not emitted by one of the association members, please contact us.</p>`;
+            html = `<p>${association.name} has been updated!</p>`;
+
+            if (Object.keys(modifiedFields).length > 0) {
+                html += `<p>The following fields were modified:</p><ul>`;
+                for (const [field, value] of Object.entries(modifiedFields)) {
+                    html += `<li>${field.charAt(0).toUpperCase() + field.slice(1)}: ${value}</li>`;
+                }
+                html += `</ul>`;
+            }
+            
+            html += `<p>If the update was not emitted by one of the association members, please contact us.</p>`;
+
         } else if (emailType === 'delete') {
             subject = `[French association administration service] ${association.name} has been deleted!`;
             html = `<p>${association.name} has been deleted!</p>
@@ -149,16 +181,16 @@ export class AssociationsService {
         }
     }
 
-    private async notifyComponent(association: Association, notificationType: string): Promise<void> {
+    private async notifyComponent(association: Association, modifiedFields: { [key: string]: any }, notificationType: string): Promise<void> {
         if (notificationType !== 'delete') {
             await this.assoRepository.save(association);
             if (notificationType === 'create') {
-                await this.sendEmail(association, 'create');
+                await this.sendEmail(association, modifiedFields, 'create');
             } else if (notificationType === 'update') {
-                await this.sendEmail(association, 'update');
+                await this.sendEmail(association, modifiedFields, 'update');
             }
         } else if (notificationType === 'delete') {
-            await this.sendEmail(association, 'delete');
+            await this.sendEmail(association, modifiedFields, 'delete');
         }
     }
 }
