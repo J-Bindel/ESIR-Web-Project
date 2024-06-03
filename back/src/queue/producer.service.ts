@@ -11,16 +11,16 @@ export class ProducerService {
     const connection = amqp.connect([rabbitMqUrl]);
     this.channelWrapper = connection.createChannel({
       setup: (channel: Channel) => {
-        return channel.assertQueue('emailQueue', { durable: true });
+        return channel.assertQueue('notificationQueue', { durable: true });
       },
     });
   }
 
-  async addToEmailQueue(mail: any) {
+  async addToNotificationQueue(notification: any) {
     try {
       await this.channelWrapper.sendToQueue(
-        'emailQueue',
-        Buffer.from(JSON.stringify(mail)),
+        'notificationQueue',
+        Buffer.from(JSON.stringify(notification)),
         {
           persistent: true,
         },
@@ -28,7 +28,7 @@ export class ProducerService {
       Logger.log('Sent To Queue');
     } catch (error) {
       throw new HttpException(
-        'Error adding mail to queue',
+        'Error adding notification to queue',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
