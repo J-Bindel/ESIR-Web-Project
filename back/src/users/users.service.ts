@@ -39,36 +39,74 @@ export class UsersService {
             email: email,
             password: hash
          })
-         await this.notifyComponent(newUser, 'create');
+         await this.notifyComponent(newUser, {}, 'create');
          return newUser;
      }
      
     public async setUser(id: number, firstname: string, lastname: string, age: number, email: string, password: string): Promise <User>{
-         if (firstname !== undefined && lastname !== undefined && age !== undefined && email !== undefined && password !== undefined) {
-            const saltOrRounds = 10;
-            const hash = await bcrypt.hash(password, saltOrRounds);
-            const user: User = await this.repository.findOne({where: {id: Equal(id)}});
-            user.firstname = firstname;
-            user.lastname = lastname;
-            user.age = age;
-            user.email = email;
-            user.password = hash;
-            await this.notifyComponent(user, 'update');
+        if (
+            firstname !== undefined &&
+            lastname !== undefined &&
+            age !== undefined &&
+            email !== undefined &&
+            password !== undefined
+          ) {
+
+            const user: User = await this.repository.findOne({ where: { id: Equal(id) } });
+
+            if (!user) {
+                throw new Error('User not found');
+            }
+            
+            const modifiedFields: { [key: string]: any } = {};
+
+            if (user.firstname !== firstname) {
+                modifiedFields.firstname = firstname;
+                user.firstname = firstname;
+            }
+            if (user.lastname !== lastname) {
+                modifiedFields.lastname = lastname;
+                user.lastname = lastname;
+            }
+            if (user.age !== age) {
+                modifiedFields.age = age;
+                user.age = age;
+            }
+            if (user.email !== email) {
+                modifiedFields.email = email;
+                user.email = email;
+            }
+            
+            
+            const isPasswordModified = await bcrypt.compare(password, user.password);
+            if (!isPasswordModified) {
+                const saltOrRounds = 10;
+                const hash = await bcrypt.hash(password, saltOrRounds);
+                modifiedFields.password = hash;
+                user.password = hash;
+            }
+
+            if (Object.keys(modifiedFields).length > 0) {
+                await this.repository.save(user);
+                await this.notifyComponent(user, modifiedFields, 'update');
+            }
+
             return user;
-         }
-         return undefined;
-     }
+        }
+
+        return undefined;
+    }
       
     public async deleteUser(id: number) : Promise <boolean>{
         const user: User = await this.getUserById(id);
-        await this.notifyComponent(user, 'delete');
+        await this.notifyComponent(user, {},'delete');
         return true;
      }
 
-    private async sendEmail(user: User, emailType: string): Promise<void> {
+    private async sendEmail(user: User, modifiedFields: { [key: string]: any }, emailType: string): Promise<void> {
         let subject: string;
         let html: string;
-
+    
         if (emailType === 'create') {
             subject = 'Welcome to French association administration service!';
             html = `<h1>Welcome ${user.firstname} ${user.lastname}!</h1>
@@ -77,35 +115,44 @@ export class UsersService {
         } else if (emailType === 'update') {
             subject = '[French association administration service] Your account has been updated';
             html = `<h1>Hello ${user.firstname} ${user.lastname}!</h1>
-            <p>Your account has been updated.</p>
-            <p>If you did not perform this operation, please contact us.</p>`;
+            <p>Your account has been updated.</p>`;
+    
+            if (Object.keys(modifiedFields).length > 0) {
+                html += `<p>The following fields were modified:</p><ul>`;
+                for (const [field, value] of Object.entries(modifiedFields)) {
+                    html += `<li>${field.charAt(0).toUpperCase() + field.slice(1)}: ${value}</li>`;
+                }
+                html += `</ul>`;
+            }
+    
+            html += `<p>If you did not perform this operation, please contact us.</p>`;
         } else if (emailType === 'delete') {
             subject = '[French association administration service] Your account has been deleted';
             html = `<h1>Goodbye ${user.firstname} ${user.lastname}!</h1>
             <p>Your account has been deleted.</p>
             <p>If you did not perform this operation, please contact us.</p>`;
         }
-
+    
         const message = {
             email: user.email,
             subject: subject,
             html: html
-        }
+        };
         
         await this.producerService.addToEmailQueue(message);
     }
 
-    private async notifyComponent(user: User, notificationType: string): Promise<void> {
+    private async notifyComponent(user: User, modifiedFields: { [key: string]: any }, notificationType: string): Promise<void> {
         if (notificationType !== 'delete') {
             await this.repository.save(user);
             if (notificationType === 'create') {
-                await this.sendEmail(user, 'create');
+                await this.sendEmail(user, modifiedFields, 'create');
             } else if (notificationType === 'update') {
-                await this.sendEmail(user, 'update');
+                await this.sendEmail(user, modifiedFields, 'update');
             }
         } else if (notificationType === 'delete') {
             await this.repository.delete(user);
-            await this.sendEmail(user, 'delete');
+            await this.sendEmail(user, modifiedFields, 'delete');
             this.eventEmitter.emit('user.deleted', new UserDeletedEvent(user.id));
         }
     }
