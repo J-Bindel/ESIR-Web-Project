@@ -1,15 +1,19 @@
-## How to use this project?
+# ESIR-Web-Project
+
+## Goal
+
+The goal of the ESIR-Web-Project is to provide a website with users and associations management facilities.
+
+## Context
+
+The idea behind this project is to manage the tremendous amount of associations in the French administration.
+
+## Answer
+
+To solve this problem, we will provide a locked site with three pages:
+* The list of all users
+* The list of all associations
+* A profile editing page
 
 
-To use this project:
-1. Create a volume
-```sh 
-# Docker volume
-sudo docker volume create mysql-db
-```
-2. Start docker compose
-```sh
-# Start compose
-sudo docker compose up --force-recreate --build
-```
 
