@@ -42,6 +42,13 @@ services:
     ports:
       - '5672:5672'
       
+  quarkus-app:
+    build: ./rabbitmq-quickstart-processor
+    ports:
+      - "8080:8080"
+    environment:
+      - FROM_EMAIL=no-reply@fradminservice.com
+
   # Front
   front:
     build: ./front
