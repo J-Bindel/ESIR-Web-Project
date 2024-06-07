@@ -14,6 +14,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.jboss.logging.Logger;
 
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+
 import io.quarkus.mailer.Mail;
 import io.quarkus.mailer.Mailer;
 
@@ -28,6 +30,9 @@ public class NotificationProcessor {
     ObjectMapper objectMapper; // Injecting the Jackson ObjectMapper
 
     @Inject Mailer mailer;
+
+    @ConfigProperty(name = "quarkus.mailer.from")
+    String fromEmail;
 
     @Incoming("notifications")
     @io.smallrye.reactive.messaging.annotations.Blocking
@@ -115,7 +120,7 @@ public class NotificationProcessor {
                 throw new IllegalArgumentException("Unsupported email type: " + emailType);
         }
 
-        mailer.send(Mail.withHtml(notification.getEmail(), subject, html.toString()));
+        mailer.send(Mail.withHtml(notification.getEmail(), subject, html.toString()).setFrom(fromEmail));
     }
 
     private String capitalizeFirstLetter(String str) {
