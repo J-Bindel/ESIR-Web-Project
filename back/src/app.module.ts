@@ -4,7 +4,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { EmailModule } from './email/email.module';
 
 @Module({
   imports: [
@@ -18,7 +17,7 @@ import { EmailModule } from './email/email.module';
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
-    UsersModule, AssociationsModule, AuthModule, EventEmitterModule.forRoot(), EmailModule],
+    UsersModule, AssociationsModule, AuthModule, EventEmitterModule.forRoot()],
   controllers: [],
   providers: [],
 })
