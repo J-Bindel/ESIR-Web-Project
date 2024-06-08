@@ -6,6 +6,7 @@ import main.java.Association;
 import main.java.Notification;
 import main.java.User;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import org.eclipse.microprofile.reactive.messaging.Incoming;
@@ -36,7 +37,8 @@ public class NotificationProcessor {
 
     @Incoming("notifications")
     @io.smallrye.reactive.messaging.annotations.Blocking
-    public void process(String notificationRequest) {
+    public void process(byte[] notificationRequestBytes) {
+        String notificationRequest = new String(notificationRequestBytes, StandardCharsets.UTF_8);
         try {
             Notification notification = objectMapper.readValue(notificationRequest, Notification.class);
 
