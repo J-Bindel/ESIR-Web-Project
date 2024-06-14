@@ -1,5 +1,11 @@
 package main.java;
 
+import io.quarkus.runtime.StartupEvent;
+import io.smallrye.reactive.messaging.annotations.Blocking;
+import jakarta.enterprise.event.Observes;
+
+import jakarta.annotation.PostConstruct;
+
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import main.java.Association;
@@ -20,8 +26,6 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import io.quarkus.mailer.Mail;
 import io.quarkus.mailer.Mailer;
 
-import io.smallrye.common.annotation.Blocking;
-
 @ApplicationScoped
 public class NotificationProcessor {
 
@@ -30,21 +34,23 @@ public class NotificationProcessor {
     @Inject
     ObjectMapper objectMapper; // Injecting the Jackson ObjectMapper
 
-    @Inject Mailer mailer;
-
-    @ConfigProperty(name = "quarkus.mailer.from")
-    String fromEmail;
+    @Inject 
+    Mailer mailer;
 
     @Incoming("notifications")
-    @io.smallrye.reactive.messaging.annotations.Blocking
+    @Blocking
     public void process(byte[] notificationRequestBytes) {
-        String notificationRequest = new String(notificationRequestBytes, StandardCharsets.UTF_8);
         try {
+            String notificationRequest = new String(notificationRequestBytes, StandardCharsets.UTF_8);
+            LOGGER.info("Received message bytes: " + notificationRequest);
+
             Notification notification = objectMapper.readValue(notificationRequest, Notification.class);
+            LOGGER.info("Parsed notification object: " + notification);
 
             sendEmail(notification);
+            
+            LOGGER.info("Email sent for notification: " + notification);
 
-            LOGGER.info("Processed notification: " + notification);
         } catch (Exception e) {
             LOGGER.error("Error processing notification", e);
         }
@@ -122,7 +128,12 @@ public class NotificationProcessor {
                 throw new IllegalArgumentException("Unsupported email type: " + emailType);
         }
 
-        mailer.send(Mail.withHtml(notification.getEmail(), subject, html.toString()).setFrom(fromEmail));
+        LOGGER.info("Sending email to " + notification.getEmail() + " with subject: " + subject + " and content: " + html.toString());
+
+        mailer.send(Mail.withHtml(notification.getEmail(), subject, html.toString()));
+        
+        LOGGER.info("Email sent successfully to: " + notification.getEmail());
+
     }
 
     private String capitalizeFirstLetter(String str) {
