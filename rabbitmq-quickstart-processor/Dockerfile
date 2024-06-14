@@ -1,11 +1,13 @@
-# Image for the Quarkus application built with Mandrel
-FROM registry.access.redhat.com/ubi8/ubi-minimal
-
+FROM quay.io/quarkus/ubi-quarkus-native-image:22.3-java17 AS build
 WORKDIR /work/
 COPY target/*-runner /work/application
-RUN chmod 775 /work
+COPY target/quarkus-app/* /work/quarkus-app/
+COPY target/quarkus-app/lib/ /work/quarkus-app/lib/
+COPY target/quarkus-app/app/ /work/quarkus-app/app/
+COPY target/quarkus-app/quarkus/ /work/quarkus-app/quarkus/
 
-ENV LIBRARY_PATH=/usr/lib64:/usr/lib
-
+FROM registry.access.redhat.com/ubi8/ubi-minimal
+WORKDIR /work/
+COPY --from=build /work/ /work/
 EXPOSE 8080
 CMD ["./application", "-Dquarkus.http.host=0.0.0.0"]
