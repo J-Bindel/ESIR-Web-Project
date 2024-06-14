@@ -3,21 +3,34 @@
 
 services:
 
+  # Front
+  front:
+    build: ./front
+    ports:
+      - 4200:4200
+      - 49153:49153
+    volumes:
+      - ./front:/usr/src/app
+    environment:
+      - NODE_ENV=dev
+    command: bash -c "npm start"
+    depends_on:
+      - back
+
   maildev:
     image: soulteary/maildev
     ports:
       - 1080:1080
       - 1025:1025
-      
 
   # DB
   database:
     image: mysql:8
     restart: always
-    command: --default-authentication-plugin=caching_sha2_password
     environment:
       - MYSQL_ROOT_PASSWORD=admin
       - MYSQL_DATABASE=fr_administration_database
+      - MYSQL_DEFAULT_AUTHENTICATION_PLUGIN=caching_sha2_password
     volumes:
       - mysql-db:/var/lib/mysql
     ports:
@@ -38,9 +51,13 @@ services:
       RABBITMQ_URL: amqp://rabbitmq
 
   rabbitmq:
-    image: 'rabbitmq:latest'
+    image: 'rabbitmq:management'
     ports:
       - '5672:5672'
+      - '15672:15672'
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
       
   quarkus-app:
     build: ./rabbitmq-quickstart-processor
@@ -52,19 +69,16 @@ services:
       - back
       - rabbitmq
 
-  # Front
-  front:
-    build: ./front
+  # Grafana service
+  grafana:
+    image: grafana/grafana:latest
     ports:
-      - 4200:4200
-      - 49153:49153
-    volumes:
-      - ./front:/usr/src/app
+      - 3001:3000
     environment:
-      - NODE_ENV=dev
-    command: bash -c "npm start"
-    depends_on:
-      - back
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana-data:/var/lib/grafana
 
   # # Gateway
   # nginx:
@@ -79,3 +93,4 @@ services:
 volumes:
   mysql-db:
     external: true
+  grafana-data:
