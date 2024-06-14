@@ -54,7 +54,7 @@ export class UserEditPopupComponent {
     const userData = {
       firstname: this.firstname.value,
       lastname: this.lastname.value,
-      age: this.age.value,
+      age: this.numericAge,
       email: this.email.value,
       password: this.data.password
   };
@@ -80,5 +80,10 @@ export class UserEditPopupComponent {
       this.errorMessage[fieldName] = '';
     }
   }
+
+    // Getter to return age as a number
+    get numericAge(): number {
+      return Number(this.age.value);
+    }
 
 }
