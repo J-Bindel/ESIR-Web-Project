@@ -80,6 +80,17 @@ services:
     volumes:
       - grafana-data:/var/lib/grafana
 
+  # Prometheus service
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - 9000:9090
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - prometheus-data:/prometheus
+    command: --web.enable-lifecycle  --config.file=/etc/prometheus/prometheus.yml
+
+
   # # Gateway
   # nginx:
   #   build: ./nginx
@@ -94,3 +105,4 @@ volumes:
   mysql-db:
     external: true
   grafana-data:
+  prometheus-data:
