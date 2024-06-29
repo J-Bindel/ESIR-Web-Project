@@ -1,9 +1,6 @@
-# Docker compose of my project
-# The order matter
-
 services:
 
-  # Front
+  # Front (Angular)
   front:
     build: ./front
     ports:
@@ -23,7 +20,7 @@ services:
       - 1080:1080
       - 1025:1025
 
-  # DB
+  # DB (MySQL)
   database:
     image: mysql:8
     restart: always
@@ -35,9 +32,9 @@ services:
       - mysql-db:/var/lib/mysql
     ports:
       - 3306:3306
-  
-  # Back
-  back: 
+
+  # Back (NestJS)
+  back:
     build: ./back
     ports:
       - 3000:3000
@@ -58,7 +55,8 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
-      
+
+  # Notification service
   quarkus-app:
     build: ./rabbitmq-quickstart-processor
     ports:
@@ -84,23 +82,25 @@ services:
   prometheus:
     image: prom/prometheus:latest
     ports:
-      - 9000:9090
+      - 9090:9090
     volumes:
       - ./prometheus:/etc/prometheus
       - prometheus-data:/prometheus
     command: --web.enable-lifecycle  --config.file=/etc/prometheus/prometheus.yml
+   
+  # Prometheus Node Exporter
+  node-exporter:
+    image: prom/node-exporter:latest
+    ports:
+      - 9100:9100
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
 
-
-  # # Gateway
-  # nginx:
-  #   build: ./nginx
-  #   image: jbindel/fr_administration_gateway
-  #   depends_on:
-  #     - front
-  #     - back
-  #   ports:
-  #     - 80:80
-  
 volumes:
   mysql-db:
     external: true
