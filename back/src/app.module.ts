@@ -5,6 +5,8 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { PrometheusModule } from "@willsoto/nestjs-prometheus";
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { LoggingInterceptor } from './logging.interceptor';
 
 @Module({
   imports: [
@@ -20,6 +22,6 @@ import { PrometheusModule } from "@willsoto/nestjs-prometheus";
     }),
     UsersModule, AssociationsModule, AuthModule, EventEmitterModule.forRoot(), PrometheusModule.register()],
   controllers: [],
-  providers: [],
+  providers: [{ provide: APP_INTERCEPTOR, useClass: LoggingInterceptor }],
 })
-export class AppModule {}
+export class AppModule { }
